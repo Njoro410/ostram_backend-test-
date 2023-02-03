@@ -7,7 +7,7 @@ from assetmanager.models import Asset
 # Create your models here.
 class Loan_Type(models.Model):
     name=models.CharField(max_length=50)
-    rate=models.DecimalField(max_digits=5, decimal_places=2)
+    rate=models.DecimalField(max_digits=5, decimal_places=5)
     description=models.TextField()
     need_collateral=models.BooleanField(help_text='does this type of Loan need Coollateral')
     need_guarantor=models.BooleanField(help_text='does this type of loan need a gurantor')
