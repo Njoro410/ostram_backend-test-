@@ -11,12 +11,10 @@ class Loan_Type(models.Model):
     description=models.TextField()
     need_collateral=models.BooleanField(help_text='does this type of Loan need Coollateral')
     need_guarantor=models.BooleanField(help_text='does this type of loan need a gurantor')
-    market=models.CharField(null=True, help_text="these include the category of people who will be interested in this particular product", max_length=50, choices=MARKET_CHOICES )
     documents=models.ManyToManyField('documentType',help_text="Include documents that are needed here for this particular loan.. You can go to the document section to add or delete document")
     min_amount_allowed=models.IntegerField(null=True, blank=True)#null means that any price
     max_amount_allowed=models.IntegerField(null=True, blank=True)#min price must not be more than maximum price
     interest_type=models.CharField(max_length=50, choices=INTEREST_TYPE_CHOICES, default='Flat Rate')
-    documents = models.ForeignKey('Documents', on_delete=models.CASCADE, null=True, blank=True)
 
     
     def __str__(self):
