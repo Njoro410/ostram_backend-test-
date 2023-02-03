@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'deposits',
     'administration',
     'assetmanager',
-    'phonenumber_field'
+    'phonenumber_field',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
