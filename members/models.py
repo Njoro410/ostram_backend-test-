@@ -20,6 +20,8 @@ class Members(models.Model):
   next_of_kin = models.CharField(max_length=120, null=True, blank=True)
   phone_nos = models.CharField(blank=True, null=True, max_length=120)
   relationship = models.CharField(max_length=120, null = True, blank=True)
+  image = models.ImageField(upload_to='members/passport_photo/', blank=True, null=True)
+  
 
   def __str__(self):
       return self.names
