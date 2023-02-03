@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import cloudinary_storage
+import cloudinary
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +43,9 @@ INSTALLED_APPS = [
     'loans',
     'savings',
     'deposits',
+    'administration',
+    'assetmanager',
+    'phonenumber_field'
 ]
 
 MIDDLEWARE = [
@@ -85,16 +89,29 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 #     }
 # }
 
+
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': '2yU9P2VqSniW85FRrnjZ',
-        'HOST': 'containers-us-west-53.railway.app',
-        'PORT': '7758',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'sms',
+        'USER': 'brian',
+        'PASSWORD': '123456',
+        
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'railway',
+#         'USER': 'postgres',
+#         'PASSWORD': 'AQRV6S5TuUQYa8XOVAnw',
+#         'HOST': 'containers-us-west-53.railway.app',
+#         'PORT': '7758',
+#     }
+# }
 
 
 
@@ -138,3 +155,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dk83hrqhe',
+    'API_KEY': '185332726954136',
+    'API_SECRET': 'Wvv4aKo6RaPdIuGyK3gFYveBcb4'
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
