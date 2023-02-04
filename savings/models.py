@@ -5,7 +5,7 @@ from administration.models import baseModel
 # Create your models here.
 class Savings_Account(baseModel):
     account_owner = models.ForeignKey(Members, on_delete=models.CASCADE, related_name='savings_account')  
-    balance = models.DecimalField(max_digits=8, decimal_places=2)
+    balance = models.DecimalField(max_digits=8, decimal_places=3)
     
     
     def __str__(self):
