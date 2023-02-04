@@ -5,3 +5,10 @@ class LoanTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Loan_Type
         fields = "__all__"
+        
+        
+class LoanSerializer(serializers.ModelSerializer):
+    # guarantors = MemberSerializer(many=True)
+    class Meta:
+        model = Loans
+        fields = "__all__"

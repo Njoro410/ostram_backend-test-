@@ -52,3 +52,5 @@ def loantype_detail(request,id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
     
+    
+    
