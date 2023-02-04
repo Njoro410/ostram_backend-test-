@@ -4,7 +4,8 @@ from .serializers import LoanTypeSerializer, LoanSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-
+from members.models import Members
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 
@@ -53,7 +54,29 @@ def loantype_detail(request, id):
 
 
 @api_view(['GET'])
+#  a function to get a list of all loans
 def get_all_loans(request):
     loans = Loans.objects.all()
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+# get loans based on member id
+def get_loans_by_member_id(request, member_id):
+    try:
+        member = get_object_or_404(Members, mbr_no=member_id)
+        loan = Loans.objects.filter(lendee=member)
+    except Loans.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = LoanSerializer(loan, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = LoanSerializer(loan, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
