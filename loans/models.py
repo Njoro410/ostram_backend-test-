@@ -25,16 +25,19 @@ class Loans(models.Model):
     loan_type = models.ForeignKey(Loan_Type, on_delete=models.DO_NOTHING)
     amount = models.DecimalField(max_digits=8, decimal_places=2)
     status=models.CharField(max_length=200, choices=STATUS_CHOICES)
-    application_date=models.DateField(auto_now_add=True)
-    issue_date = models.DateTimeField(auto_now_add=True)
-    repayment_date = models.DateTimeField(auto_now_add=True)
-    guarantors = models.ForeignKey(Members, on_delete=models.DO_NOTHING, related_name='guarantors')
+    application_date=models.DateField(auto_now_add=False)
+    issue_date = models.DateField(auto_now_add=False)
+    repayment_date = models.DateField(auto_now_add=False)
+    guarantors = models.ManyToManyField(Members, related_name='guarantors')
     payment_frequency=models.CharField(max_length=50, choices=PAYMENT_FREQUENCY_CHOICES)
     repaid_amount = models.DecimalField(max_digits=8, decimal_places=2)
-    loan_interest = models.DecimalField(default=0.012,max_digits=8, decimal_places=2)
-    late_charge = models.IntegerField(default=100)
+    # loan_interest = models.DecimalField(default=0.012,max_digits=8, decimal_places=2)
+    # late_charge = models.IntegerField(default=100)
     collateral=models.ForeignKey(Asset,on_delete=models.CASCADE, related_name='loan_colateral', null=True, blank=True)
     documents = models.ForeignKey('Documents', on_delete=models.CASCADE, null=True, blank=True)
+    
+    def __str__(self):
+        return f"{self.lendee.names}'s loan"
 
 
 class Documents(baseModel):
