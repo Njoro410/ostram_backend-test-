@@ -1,6 +1,4 @@
-COLOR_CHOICES=(
-	('#ff000','red'),
-	)
+
 
 GENDER_CHOICES=(
     ('male','Male'),
@@ -25,24 +23,11 @@ RESIDENTIAL_STATUS_CHOICES=(
     ('Staying with Parent','Staying with Parent' ),
 	)
 
-CURRENCY_CHOICES=(
-	('NGN','NGN'),
-	('USD','USD')
-	)
-
-
 TITLE_CHOICES = (
     ('MR', 'Mr.'),
     ('MRS', 'Mrs.'),
     ('MS', 'Ms.'),
 )
-
-ACCOUNT_CHOICES=(
-	('savings','Savings'),
-	('current','Current'),
-    ('Dollar Account', 'Dollar Account'),
-    ('Others','Others'),
-	)
 
 PAYMENT_FREQUENCY_CHOICES=(
 	('daily','daily'),
@@ -63,20 +48,20 @@ PAYMENT_METHOD=(
     ('Cash','Cash'),
     ('Bank','Bank'),
 	)
+
 MESSAGE_STATUS=(
 	('sent','sent'),
 	('received','received'),
-	)
-
-MARKET_CHOICES=(
-	('Enterpreneurs', 'Enterpreneurs'),
-	('White Collar Jobs', 'White Collar Jobs'),
-	('Students', 'Student'),
-	('General', 'General'),
-	('Others', 'Others'),
 	)
 
 INTEREST_TYPE_CHOICES=(
 	 ('Flat Rate','Flat Rate'),
 	 ('Reducing Balance', 'Reducing Balance'),
 	)
+
+DOCUMENT_TYPE_CHOICES=(
+	('National ID','National ID'),
+	('Passport','Passport'),
+	('KRA Pin','KRA Pin'),
+	('Drivers License','Drivers License'),
+)
