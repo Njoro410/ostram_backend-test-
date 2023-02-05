@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Loans, Loan_Type, Documents, documentType
-from .serializers import LoanTypeSerializer, LoanSerializer
+from .serializers import LoanTypeSerializer, LoanSerializer, LoanDocumentSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -79,4 +79,24 @@ def get_loans_by_member_id(request, member_id):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE', 'POST'])
+def loan_document_upload(request, loan_id):
+    try:
+        loan = get_object_or_404(Loans, id=loan_id)
+    except Loans.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        documents = Documents.objects.filter(loan=loan)
+        serializer = LoanDocumentSerializer(documents, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = LoanDocumentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(loan=loan)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
