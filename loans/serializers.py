@@ -8,7 +8,13 @@ class LoanTypeSerializer(serializers.ModelSerializer):
         
         
 class LoanSerializer(serializers.ModelSerializer):
+    borrower_membership_number = serializers.ReadOnlyField()
     # guarantors = MemberSerializer(many=True)
     class Meta:
         model = Loans
+        fields = "__all__"
+        
+class LoanDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Documents
         fields = "__all__"
