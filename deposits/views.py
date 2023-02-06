@@ -28,15 +28,22 @@ def get_member_deposits(request, member_no):
 
     if request.method == 'GET':
         serializer = DepositsSerializer(deposits, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+        return Response({"message":"Success", "data": serializer.data}, status=status.HTTP_200_OK)
+    
+    elif request.method == 'POST':
+        serializer = DepositsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Deposit Account created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({"message": "Deposit Account creation failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
     elif request.method == 'PUT':
         serializer = DepositsSerializer(deposits, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Deposit Account updated successfully", "data": serializer.data}, status=status.HTTP_202_ACCEPTED)
+        return Response({"message": "Deposit Account updating failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         deposits.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Deposit Account deleted successfullly"}, status=status.HTTP_204_NO_CONTENT)
