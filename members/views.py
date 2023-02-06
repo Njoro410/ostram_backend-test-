@@ -10,9 +10,9 @@ class MemberList(generics.ListCreateAPIView):
   def get_queryset(self):
     queryset = Members.objects.all()
     # paginator = Paginator(data,25)
-    specific_member = self.request.query_params.get('mbr_no')
-    if specific_member is not None:
-      queryset = queryset.filter(mbr_no=specific_member)
+    query_param = self.request.query_params.get('q')
+    if query_param is not None:
+      queryset = queryset.filter(mbr_no=query_param)
     return queryset
 
 class MemberDetail(generics.RetrieveUpdateDestroyAPIView):
