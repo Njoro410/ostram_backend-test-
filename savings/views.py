@@ -28,15 +28,22 @@ def get_member_savings(request, member_no):
 
     if request.method == 'GET':
         serializer = SavingsSerializer(savings, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+        return Response({"message":"Success", "data": serializer.data}, status=status.HTTP_200_OK)
+    
+    elif request.method == 'POST':
+        serializer = SavingsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Savings Account created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({"message": "Savings Account creation failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
     elif request.method == 'PUT':
         serializer = SavingsSerializer(savings, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Savings Account updated successfully", "data": serializer.data}, status=status.HTTP_202_ACCEPTED)
+        return Response({"message": "Savings Account updating failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        savings.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        deposits.delete()
+        return Response({"message": "Savings Account deleted successfullly"}, status=status.HTTP_204_NO_CONTENT)
