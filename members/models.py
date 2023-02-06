@@ -20,6 +20,7 @@ class Members(models.Model):
   next_of_kin = models.CharField(max_length=120, null=True, blank=True)
   phone_nos = models.CharField(blank=True, null=True, max_length=120)
   relationship = models.CharField(max_length=120, null = True, blank=True)
+  kra_pin = models.CharField(blank=True, null=True, max_length=60)
 
   def __str__(self):
       return self.names
