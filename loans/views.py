@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 
 
 @api_view(['GET', 'POST'])
-def loan_types_create_add(request):
+def loan_types_get_add(request):
     """
     function to list and add loan types
     """
@@ -57,15 +57,17 @@ def loantype_detail(request, id):
 #  a function to get a list of all loans
 def get_all_loans(request):
     loans = Loans.objects.all()
+    if not loans:
+        return Response({'detail':'Not found'},status=status.HTTP_404_NOT_FOUND)
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-# get loans based on member id
-def get_loans_by_member_id(request, member_id):
+# get loans based on member no
+def get_loans_by_member_no(request, member_no):
     try:
-        member = get_object_or_404(Members, mbr_no=member_id)
+        member = get_object_or_404(Members, mbr_no=member_no)
         loan = Loans.objects.filter(lendee=member)
     except Loans.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -83,14 +85,14 @@ def get_loans_by_member_id(request, member_id):
 
 
 @api_view(['GET', 'PUT', 'DELETE', 'POST'])
-def loan_document_upload(request, loan_id):
+def loan_documents_by_loan_id(request, loan_id):
     try:
         loan = get_object_or_404(Loans, id=loan_id)
+        documents = Documents.objects.filter(loan=loan)
     except Loans.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        documents = Documents.objects.filter(loan=loan)
         serializer = LoanDocumentSerializer(documents, many=True)
         return Response(serializer.data)
 
@@ -100,3 +102,14 @@ def loan_document_upload(request, loan_id):
             serializer.save(loan=loan)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PUT':
+        serializer = LoanDocumentSerializer(documents, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        documents.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
