@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 
 from .models import Members, Residential_Areas
 from .serializers import MemberSerializer, ResidentialAreaSerializer
@@ -14,11 +15,14 @@ class MemberList(generics.ListCreateAPIView):
   pagination_class = StandardResultSetPagination
 
   def get_queryset(self):
+    # queryset = Members.objects.all()
     queryset = Members.objects.all()
-    # paginator = Paginator(data,25)
     query_param = self.request.query_params.get('q')
+    # data = queryset
     if query_param is not None:
+      # queryset = queryset.filter(mbr_no=query_param)
       queryset = queryset.filter(mbr_no=query_param)
+      # data = queryset
     return queryset
 
 class MemberDetail(generics.RetrieveUpdateDestroyAPIView):
