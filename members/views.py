@@ -1,11 +1,17 @@
 from rest_framework import generics
-from django.core.paginator import Paginator
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Members, Residential_Areas
 from .serializers import MemberSerializer, ResidentialAreaSerializer
 
+#pagination
+class StandardResultSetPagination(PageNumberPagination):
+  page_size = 50
+  page_size_query_param = 'page_size'
+  max_page_size = 1000
 class MemberList(generics.ListCreateAPIView):
   serializer_class = MemberSerializer
+  pagination_class = StandardResultSetPagination
 
   def get_queryset(self):
     queryset = Members.objects.all()
@@ -22,6 +28,7 @@ class MemberDetail(generics.RetrieveUpdateDestroyAPIView):
 class ResidentialAreaList(generics.ListCreateAPIView):
   serializer_class = ResidentialAreaSerializer
   queryset = Residential_Areas.objects.all()
+  pagination_class = StandardResultSetPagination
 
 class ResidentialAreaDetail(generics.RetrieveUpdateDestroyAPIView):
   serializer_class = ResidentialAreaSerializer
