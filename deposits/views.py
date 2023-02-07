@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from .serializers import DepositsSerializer
 from rest_framework import status
 from .models import Deposits_Account
-from members.models import Members
+from members.models import members
 from django.db.models import Sum
 # Create your views here.
 
@@ -21,7 +21,7 @@ def get_total_deposits(request):
 # get deposits based on member number
 def get_member_deposits(request, member_no):
     try:
-        member = get_object_or_404(Members, mbr_no=member_no)
+        member = get_object_or_404(members, mbr_no=member_no)
         deposits = Deposits_Account.objects.filter(account_owner=member)
     except Deposits_Account.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
