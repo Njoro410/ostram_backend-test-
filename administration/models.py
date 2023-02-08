@@ -14,7 +14,7 @@ class baseModel(models.Model):
     updated_by = models.ForeignKey(
         User, on_delete=models.CASCADE, blank=True, related_name='applicationupdater', null=True)
     branch = models.ForeignKey(
-        'Branch', on_delete=models.CASCADE, related_name='applicationbranch', null=True)
+        'Branch', on_delete=models.CASCADE, default=1, null=True)
 
     def audit(self, request):
         self.created_by = request.user
