@@ -2,6 +2,7 @@ from django.db import models
 from administration.choices import *
 from administration.models import baseModel
 from members.models import members
+from administration.models import Branch
 
 # Create your models here.
 
@@ -20,19 +21,18 @@ class Asset(baseModel):
 
     def __str__(self):
     	return self.name
-
-
-# class assetDocument(baseModel):
-# 	upload_date = models.DateField(auto_now_add=True)
-# 	document_name = models.CharField(max_length=200, null=True, blank=True)
-# 	file = models.FileField(upload_to='assetdocuments/')
-# 	proof_of = models.ForeignKey(Asset, on_delete=models.CASCADE)
+ 
+class officeAsset(Asset):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True,blank=True)
+    class Meta:
+         db_table = "office_asset"
+         
+    def __str__(self):
+        return f"{branch.location.name}'s office asset"
  
 
-        
 
-#     def __str__(self):
-#         return self.document_name
+
 
 class assetDocument(baseModel):
     upload_date = models.DateField(auto_now_add=True)
