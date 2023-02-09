@@ -2,7 +2,7 @@ from django.db import models
 from members.models import members
 from administration.choices import *
 from administration.models import baseModel
-from assetmanager.models import Asset
+# from assetmanager.models import Asset
 
 # Create your models here.
 
@@ -20,8 +20,8 @@ class Loan_Type(models.Model):
     min_amount_allowed = models.IntegerField(
         null=True, blank=True)
     max_amount_allowed = models.IntegerField(null=True, blank=True)
-    processing_fee = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    insurance_fee = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    processing_fee = models.DecimalField(max_digits=5, decimal_places=4, null=True, blank=True)
+    insurance_fee = models.DecimalField(max_digits=5, decimal_places=4, null=True, blank=True)
     
     class Meta:
         db_table = "loan_type"
@@ -44,22 +44,21 @@ class Loans(models.Model):
     payment_frequency = models.CharField(
         max_length=50, choices=PAYMENT_FREQUENCY_CHOICES)
     repaid_amount = models.DecimalField(max_digits=8, decimal_places=2)
-    # loan_interest = models.DecimalField(default=0.012,max_digits=8, decimal_places=2)
-    # late_charge = models.IntegerField(default=100)
-    collateral = models.ForeignKey(
-        Asset, on_delete=models.CASCADE, related_name='loan_colateral', null=True, blank=True)
-    # documents = models.ManyToManyField(
-    #     'Documents',  null=True, blank=True, related_name='loan_documents')
+    # collateral = models.ForeignKey(
+    #     Asset, on_delete=models.CASCADE, related_name='loan_colateral', null=True, blank=True)
+
     
     class Meta:
         db_table = "loans"
+        
+    def __str__(self):
+        return f"{self.lendee.names}'s loan"
 
     @property
     def borrower_membership_number(self):
         return self.lendee.mbr_no
 
-    def __str__(self):
-        return f"{self.lendee.names}'s loan"
+
 
 
 class Documents(baseModel):
