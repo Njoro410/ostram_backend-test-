@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from .models import Members, Residential_Areas
 from .serializers import MemberSerializer, ResidentialAreaSerializer
-
+from django.http import Http404
 #pagination
 class StandardResultSetPagination(PageNumberPagination):
   page_size = 50
@@ -15,15 +15,20 @@ class MemberList(generics.ListCreateAPIView):
   pagination_class = StandardResultSetPagination
 
   def get_queryset(self):
-    # queryset = Members.objects.all()
-    queryset = Members.objects.all()
-    query_param = self.request.query_params.get('q')
-    # data = queryset
-    if query_param is not None:
-      # queryset = queryset.filter(mbr_no=query_param)
-      queryset = queryset.filter(mbr_no=query_param)
+    try:
+
+      # queryset = Members.objects.all()
+      queryset = Members.objects.all()
+      query_param = self.request.query_params.get('q')
       # data = queryset
-    return queryset
+      if query_param is not None:
+        # queryset = queryset.filter(mbr_no=query_param)
+        queryset = queryset.filter(mbr_no=query_param)
+        # data = queryset
+      return queryset
+
+    except:
+      raise Http404
 
 class MemberDetail(generics.RetrieveUpdateDestroyAPIView):
   serializer_class = MemberSerializer
