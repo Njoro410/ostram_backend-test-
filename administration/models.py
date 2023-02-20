@@ -16,10 +16,6 @@ class baseModel(models.Model):
     branch = models.ForeignKey(
         'Branch', on_delete=models.CASCADE, default=1, null=True)
 
-    def audit(self, request):
-        self.created_by = request.user
-        self.branch = request.user.person.branch
-
     class Meta:
         db_table = "base_model"
 
