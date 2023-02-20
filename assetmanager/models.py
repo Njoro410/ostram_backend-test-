@@ -13,7 +13,6 @@ class loanAsset(baseModel):
     loan = models.ForeignKey(Loans, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, null=True)
     description = models.TextField(null=True)
-    file = models.FileField(upload_to='assetdocuments/',null=True)
     expiry_date = models.DateField(null=True,blank=True)
     inspection_date = models.DateField(null=True,blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, null=True)
@@ -27,17 +26,17 @@ class loanAsset(baseModel):
  
 
 
-# class assetDocument(baseModel):
-#     upload_date = models.DateField(auto_now_add=True)
-#     document_name = models.CharField(max_length=200, null=True, blank=True)
-
-#     proof_of = models.ForeignKey(loanAsset, on_delete=models.CASCADE)
+class assetDocument(baseModel):
+    upload_date = models.DateField(auto_now_add=True)
+    document_name = models.CharField(max_length=200, null=True, blank=True)
+    file = models.FileField(upload_to='assetdocuments/',null=True)
+    proof_of = models.ForeignKey(loanAsset, on_delete=models.CASCADE)
     
-#     class Meta:
-#         db_table = "asset_document"
+    class Meta:
+        db_table = "asset_document"
         
-#     def __str__(self):
-#         return self.document_name
+    def __str__(self):
+        return self.document_name
     
 		
 	
