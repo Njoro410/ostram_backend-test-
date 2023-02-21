@@ -93,26 +93,26 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sms',
-        'USER': 'brian',
-        'PASSWORD': '123456',
-        
-    }
-}
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'railway',
-#         'USER': 'postgres',
-#         'PASSWORD': '2HLeLOrw4qMOB4Z2bS3c',
-#         'HOST': 'containers-us-west-193.railway.app',
-#         'PORT': '7801',
+#         'NAME': 'sms',
+#         'USER': 'brian',
+#         'PASSWORD': '123456',
+        
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': '2HLeLOrw4qMOB4Z2bS3c',
+        'HOST': 'containers-us-west-193.railway.app',
+        'PORT': '7801',
+    }
+}
 
 
 
