@@ -17,7 +17,7 @@ def loan_types_get_add(request):
     if request.method == 'GET':
         types = Loan_Type.objects.all()
         serializer = LoanTypeSerializer(types, many=True)
-        return Response({"message":"Success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
         serializer = LoanTypeSerializer(data=request.data)
@@ -39,7 +39,7 @@ def loantype_detail(request, id):
 
     if request.method == 'GET':
         serializer = LoanTypeSerializer(loantype)
-        return Response({"message":"Success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == 'PUT':
         serializer = LoanTypeSerializer(loantype, data=request.data)
@@ -58,9 +58,9 @@ def loantype_detail(request, id):
 def get_all_loans(request):
     loans = Loans.objects.all()
     if not loans:
-        return Response({'detail':'Not found'},status=status.HTTP_404_NOT_FOUND)
+        return Response({'detail': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
     serializer = LoanSerializer(loans, many=True)
-    return Response({"message":"Success", "data": serializer.data}, status=status.HTTP_200_OK)
+    return Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -74,7 +74,7 @@ def get_loans_by_member_no(request, member_no):
 
     if request.method == 'GET':
         serializer = LoanSerializer(loan, many=True)
-        return Response({"message":"Success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == 'PUT':
         serializer = LoanSerializer(loan, data=request.data)
@@ -89,12 +89,12 @@ def loan_documents_by_loan_id(request, loan_id):
     try:
         loan = get_object_or_404(Loans, id=loan_id)
         documents = Documents.objects.filter(loan=loan)
-    except Loans.DoesNotExist:
+    except Loans.DoesNotExist: 
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = LoanDocumentSerializer(documents, many=True)
-        return Response({"message":"Success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
         serializer = LoanDocumentSerializer(data=request.data)

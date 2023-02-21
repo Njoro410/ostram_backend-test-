@@ -37,3 +37,6 @@ class assetDocument(baseModel):
         
     def __str__(self):
         return self.document_name
+    
+		
+	
