@@ -13,27 +13,28 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Residential_Areas',
+            name='residential_areas',
             fields=[
                 ('area_code', models.IntegerField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=120)),
+                ('name', models.CharField(blank=True, max_length=120)),
             ],
             options={
                 'db_table': 'residential_areas',
             },
         ),
         migrations.CreateModel(
-            name='Members',
+            name='members',
             fields=[
                 ('names', models.CharField(blank=True, max_length=120, null=True)),
                 ('mbr_no', models.IntegerField(primary_key=True, serialize=False)),
                 ('id_no', models.IntegerField(blank=True, null=True)),
-                ('gender', models.CharField(blank=True, max_length=120, null=True)),
+                ('gender', models.CharField(blank=True, choices=[('male', 'Male'), ('female', 'Female')], max_length=120, null=True)),
                 ('phone_no', models.CharField(blank=True, max_length=120, null=True)),
                 ('next_of_kin', models.CharField(blank=True, max_length=120, null=True)),
                 ('phone_nos', models.CharField(blank=True, max_length=120, null=True)),
                 ('relationship', models.CharField(blank=True, max_length=120, null=True)),
                 ('kra_pin', models.CharField(blank=True, max_length=60, null=True)),
+                ('image', models.ImageField(blank=True, null=True, upload_to='members/passport_photo/')),
                 ('residential', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='members.residential_areas')),
             ],
             options={

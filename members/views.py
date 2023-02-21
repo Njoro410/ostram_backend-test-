@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from .models import Members, Residential_Areas
+from .models import *
 from .serializers import MemberSerializer, ResidentialAreaSerializer
 from django.http import Http404
 #pagination
@@ -18,7 +18,7 @@ class MemberList(generics.ListCreateAPIView):
     try:
 
       # queryset = Members.objects.all()
-      queryset = Members.objects.all()
+      queryset = members.objects.all()
       query_param = self.request.query_params.get('q')
       # data = queryset
       if query_param is not None:
@@ -32,13 +32,13 @@ class MemberList(generics.ListCreateAPIView):
 
 class MemberDetail(generics.RetrieveUpdateDestroyAPIView):
   serializer_class = MemberSerializer
-  queryset = Members.objects.all()
+  queryset = members.objects.all()
 
 class ResidentialAreaList(generics.ListCreateAPIView):
   serializer_class = ResidentialAreaSerializer
-  queryset = Residential_Areas.objects.all()
+  queryset = residential_areas.objects.all()
   pagination_class = StandardResultSetPagination
 
 class ResidentialAreaDetail(generics.RetrieveUpdateDestroyAPIView):
   serializer_class = ResidentialAreaSerializer
-  queryset = Residential_Areas.objects.all()
+  queryset = residential_areas.objects.all()

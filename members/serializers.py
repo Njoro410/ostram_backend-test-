@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import Members, Residential_Areas
+from .models import *
 
 class MemberSerializer(serializers.ModelSerializer):
   class Meta:
-    model = Members
+    model = members
     fields = ('__all__')
 
 class ResidentialAreaSerializer(serializers.ModelSerializer):
   class Meta:
-    model = Residential_Areas
+    model = residential_areas
     fields = ('__all__')
