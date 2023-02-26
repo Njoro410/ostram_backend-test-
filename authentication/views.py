@@ -15,6 +15,8 @@ def get_user_tokens(user):
     }
 
 
+@rest_decorators.api_view(["POST"])
+@rest_decorators.permission_classes([])
 def loginView(request):
     serializer = serializers.loginSerializer(data=request.data)
     serializer.is_valid(raise_exceptions=True)
@@ -44,6 +46,12 @@ def loginView(request):
             httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
             samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
         )
+        
+        res.data = tokens
+        res["X-CSRFToken"] = csrf.get_token(request)
+        return res
+    raise rest_exceptions.AuthenticationFailed(
+        "Email or Password is incorrect!")
         
     raise rest_exceptions.AuthenticationFailed(
         "Email or Password is incorrect")
