@@ -22,5 +22,5 @@ urlpatterns = [
     path('api/savings/',include('savings.urls')),
     path('api/deposits/',include('deposits.urls')),
     path('api/assets/',include('assetmanager.urls')),
-    path('api/auth/',include('authentication.urls'))
+    path('api/auth/',include('authentication.urls', namespace="authentication"))
 ]
