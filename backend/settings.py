@@ -46,7 +46,10 @@ INSTALLED_APPS = [
     'administration',
     'assetmanager',
     'phonenumber_field',
-    'rest_framework'
+    'rest_framework',
+    'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
+    
 ]
 
 MIDDLEWARE = [
