@@ -66,3 +66,55 @@ def registerView(request):
     if user is not None:
         return response.Response("Registered!")
     return rest_exceptions.AuthenticationFailed("Invalid credentials!")
+
+
+@rest_decorators.api_view(['POST'])
+@rest_decorators.permission_classes([rest_permissions.IsAuthenticated])
+def logoutView(request):
+    try:
+        refreshToken = request.COOKIES.get(
+            settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
+        token = tokens.RefreshToken(refreshToken)
+        token.blacklist()
+
+        res = response.Response()
+        res.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
+        res.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
+        res.delete_cookie("X-CSRFToken")
+        res.delete_cookie("csrftoken")
+        res["X-CSRFToken"]=None
+        
+        return res
+    except:
+        raise rest_exceptions.ParseError("Invalid token")
+    
+
+class CookieTokenRefreshSerializer(jwt_serializers.TokenRefreshSerializer):
+    refresh = None
+
+    def validate(self, attrs):
+        attrs['refresh'] = self.context['request'].COOKIES.get('refresh')
+        if attrs['refresh']:
+            return super().validate(attrs)
+        else:
+            raise jwt_exceptions.InvalidToken(
+                'No valid token found in cookie \'refresh\'')
+
+
+class CookieTokenRefreshView(jwt_views.TokenRefreshView):
+    serializer_class = CookieTokenRefreshSerializer
+
+    def finalize_response(self, request, response, *args, **kwargs):
+        if response.data.get("refresh"):
+            response.set_cookie(
+                key=settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'],
+                value=response.data['refresh'],
+                expires=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
+                secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+                samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+            )
+
+            del response.data["refresh"]
+        response["X-CSRFToken"] = request.COOKIES.get("csrftoken")
+        return super().finalize_response(request, response, *args, **kwargs)
