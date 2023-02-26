@@ -18,8 +18,9 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('loans/',include('loans.urls')),
-    path('savings/',include('savings.urls')),
-    path('deposits/',include('deposits.urls')),
-    path('assets/',include('assetmanager.urls')),
+    path('api/loans/',include('loans.urls')),
+    path('api/savings/',include('savings.urls')),
+    path('api/deposits/',include('deposits.urls')),
+    path('api/assets/',include('assetmanager.urls')),
+    path('api/auth/',include('authentication.urls'))
 ]
