@@ -6,26 +6,44 @@ from rest_framework_simplejwt import tokens, views as jwt_views, serializers as 
 from . import serializers, models
 # Create your views here.
 
+
 def get_user_tokens(user):
     refresh = tokens.RefreshToken.for_user(user)
     return {
         "refresh_token": str(refresh),
         "access_token": str(refresh.access_token)
     }
-    
 
-    
 
 def loginView(request):
     serializer = serializers.loginSerializer(data=request.data)
     serializer.is_valid(raise_exceptions=True)
-    
+
     email = serializer.validated_data['email']
     password = serializer.validated_data['password']
-    
+
     user = authenticate(email=email, password=password)
-    
+
     if user is not None:
-        pass
-    raise rest_exceptions.AuthenticationFailed("Email or Password is incorrect")
-    
+        tokens = get_user_tokens(user)
+        res = response.Response()
+        res.set_cookie(
+            key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+            value=tokens["access_token"],
+            expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+            secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+            httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+            samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+        )
+
+        res.set_cookie(
+            key=settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'],
+            value=tokens["refresh_token"],
+            expires=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
+            secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+            httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+            samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+        )
+        
+    raise rest_exceptions.AuthenticationFailed(
+        "Email or Password is incorrect")
