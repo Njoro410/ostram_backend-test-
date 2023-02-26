@@ -46,15 +46,14 @@ def loginView(request):
             httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
             samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
         )
-        
+
         res.data = tokens
         res["X-CSRFToken"] = csrf.get_token(request)
         return res
     raise rest_exceptions.AuthenticationFailed(
         "Email or Password is incorrect!")
-        
-        
-        
+
+
 @rest_decorators.api_view(["POST"])
 @rest_decorators.permission_classes([])
 def registerView(request):
@@ -64,7 +63,7 @@ def registerView(request):
     user = serializer.save()
 
     if user is not None:
-        return response.Response("Registered!")
+       return response.Response({"message": "User registered succesfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
     return rest_exceptions.AuthenticationFailed("Invalid credentials!")
 
 
@@ -82,12 +81,12 @@ def logoutView(request):
         res.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
         res.delete_cookie("X-CSRFToken")
         res.delete_cookie("csrftoken")
-        res["X-CSRFToken"]=None
-        
+        res["X-CSRFToken"] = None
+
         return res
     except:
         raise rest_exceptions.ParseError("Invalid token")
-    
+
 
 class CookieTokenRefreshSerializer(jwt_serializers.TokenRefreshSerializer):
     refresh = None
@@ -118,3 +117,15 @@ class CookieTokenRefreshView(jwt_views.TokenRefreshView):
             del response.data["refresh"]
         response["X-CSRFToken"] = request.COOKIES.get("csrftoken")
         return super().finalize_response(request, response, *args, **kwargs)
+
+
+@rest_decorators.api_view(["GET"])
+@rest_decorators.permission_classes([rest_permissions.IsAuthenticated])
+def userDetails(request):
+    try:
+        user = models.staffAccount.objects.get(id=request.user.id)
+    except models.staffAccount.DoesNotExist:
+        return response.Response({"message": "User details not found"}, status=HTTP_404_NOT_FOUND)
+
+    serializer = serializers.AccountSerializer(user)
+    return response.Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
