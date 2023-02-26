@@ -4,7 +4,7 @@ from .models import staffAccount
 
 class registrationSerializer(serializers.ModelSerializer):
     
-    password2 = serializers.CharField(style={"input_type" : "password","write_only" : True})
+    password2 = serializers.CharField(style={"input_type" : "password"})
     
     class Meta:
         model = settings.AUTH_USER_MODEL
@@ -30,6 +30,12 @@ class registrationSerializer(serializers.ModelSerializer):
         user.save()
         
         
+class loginSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(
+        style={"input_type": "password"}, write_only=True)
+    
+    
 
 
 
