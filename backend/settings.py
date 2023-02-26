@@ -190,7 +190,7 @@ SIMPLE_JWT = {
     "UPDATE_LAST_LOGIN": False,
 
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": settings.SECRET_KEY,
+    "SIGNING_KEY": SECRET_KEY,
     "VERIFYING_KEY": "",
     "AUDIENCE": None,
     "ISSUER": None,
@@ -239,8 +239,8 @@ SIMPLE_JWT = {
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        'rest_framework_simplejwt.authentication.JWTAuthentication', # TODO: For now
-        # 'account.authenticate.CustomAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'authentication.authenticate.CustomAuthentication',
     ],
 
     "DEFAULT_PERMISSION_CLASSES": [
