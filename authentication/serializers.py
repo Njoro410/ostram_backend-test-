@@ -36,6 +36,12 @@ class loginSerializer(serializers.ModelSerializer):
         style={"input_type": "password"}, write_only=True)
     
     
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ("username", "email")
+    
+    
 
 
 
