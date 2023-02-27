@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sms',
+        'NAME': 'sacco',
         'USER': 'brian',
         'PASSWORD': '123456',
 
@@ -171,7 +171,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000"
 ]
 CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000"
@@ -229,7 +229,7 @@ SIMPLE_JWT = {
     # A string like "example.com", or None for standard domain cookie.
     'AUTH_COOKIE_DOMAIN': None,
     # Whether the auth cookies should be secure (https:// only).
-    'AUTH_COOKIE_SECURE': True,
+    'AUTH_COOKIE_SECURE': False,
     # Http only cookie flag.It's not fetch by javascript.
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_PATH': '/',        # The path of the auth cookie.

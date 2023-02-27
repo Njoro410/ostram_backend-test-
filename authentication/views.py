@@ -3,6 +3,7 @@ from django.conf import settings
 from django.middleware import csrf
 from rest_framework import exceptions as rest_exceptions, response, decorators as rest_decorators, permissions as rest_permissions
 from rest_framework_simplejwt import tokens, views as jwt_views, serializers as jwt_serializers, exceptions as jwt_exceptions
+from rest_framework import status
 from . import serializers, models
 # Create your views here.
 
@@ -19,7 +20,7 @@ def get_user_tokens(user):
 @rest_decorators.permission_classes([])
 def loginView(request):
     serializer = serializers.loginSerializer(data=request.data)
-    serializer.is_valid(raise_exceptions=True)
+    serializer.is_valid()
 
     email = serializer.validated_data['email']
     password = serializer.validated_data['password']
@@ -58,13 +59,13 @@ def loginView(request):
 @rest_decorators.permission_classes([])
 def registerView(request):
     serializer = serializers.registrationSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+    serializer.is_valid()
 
     user = serializer.save()
 
     if user is not None:
        return response.Response({"message": "User registered succesfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
-    return rest_exceptions.AuthenticationFailed("Invalid credentials!")
+    return response.Response({"message": "Could not create user", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @rest_decorators.api_view(['POST'])
