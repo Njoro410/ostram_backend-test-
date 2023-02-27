@@ -95,6 +95,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # }
 
 
+<<<<<<< HEAD
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -104,17 +105,30 @@ DATABASES = {
 
     }
 }
+=======
+
+>>>>>>> a825203cee240bbed11ea15f3e9d7625f2004c59
 
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'railway',
-#         'USER': 'postgres',
-#         'PASSWORD': '2HLeLOrw4qMOB4Z2bS3c',
-#         'HOST': 'containers-us-west-193.railway.app',
-#         'PORT': '7801',
+#         'NAME': 'sms',
+#         'USER': 'brian',
+#         'PASSWORD': '123456',
+        
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': '2HLeLOrw4qMOB4Z2bS3c',
+        'HOST': 'containers-us-west-193.railway.app',
+        'PORT': '7801',
+    }
+}
 
 
 # Password validation
@@ -164,6 +178,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': 'Wvv4aKo6RaPdIuGyK3gFYveBcb4'
 }
 
+<<<<<<< HEAD
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
@@ -250,3 +265,6 @@ REST_FRAMEWORK = {
 
 
 AUTH_USER_MODEL = "authentication.staffAccount"
+=======
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+>>>>>>> a825203cee240bbed11ea15f3e9d7625f2004c59
