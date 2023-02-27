@@ -65,3 +65,8 @@ DOCUMENT_TYPE_CHOICES=(
 	('KRA Pin','KRA Pin'),
 	('Drivers License','Drivers License'),
 )
+
+ROLES = (
+        ('Admin', 'Admin'),
+        ('User', 'User'),
+    )
