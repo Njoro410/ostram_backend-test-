@@ -46,7 +46,7 @@ def member_detail(request, member_no):
     Display individual member by member no. Can update, view and delete member"""
 
     try:
-        member = members.objects.get(pk=member_no)
+        member = members.objects.get(mbr_no=member_no)
     except members.DoesNotExist:
         return Response({'message': 'Member does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
