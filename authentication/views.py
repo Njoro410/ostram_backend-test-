@@ -11,8 +11,8 @@ from . import serializers, models
 def get_user_tokens(user):
     refresh = tokens.RefreshToken.for_user(user)
     return {
-        "refresh_token": str(refresh),
-        "access_token": str(refresh.access_token)
+        "accessToken": str(refresh.access_token),
+        "refreshToken": str(refresh)  
     }
 
 
@@ -32,7 +32,7 @@ def loginView(request):
         res = response.Response()
         res.set_cookie(
             key=settings.SIMPLE_JWT['AUTH_COOKIE'],
-            value=tokens["access_token"],
+            value=tokens["accessToken"],
             expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
             secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
             httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
@@ -41,7 +41,7 @@ def loginView(request):
 
         res.set_cookie(
             key=settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'],
-            value=tokens["refresh_token"],
+            value=tokens["refreshToken"],
             expires=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
             secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
             httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
@@ -51,8 +51,9 @@ def loginView(request):
         res.data = tokens
         res["X-CSRFToken"] = csrf.get_token(request)
         return res
-    raise rest_exceptions.AuthenticationFailed(
-        "Email or Password is incorrect!")
+    # raise rest_exceptions.AuthenticationFailed(
+    #     "Email or Password is incorrect!", code=status.HTTP_400_BAD_REQUEST)
+    return response.Response({"message": "Email or Password is incorrect!", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @rest_decorators.api_view(["POST"])
@@ -129,4 +130,4 @@ def userDetails(request):
         return response.Response({"message": "User details not found"}, status=HTTP_404_NOT_FOUND)
 
     serializer = serializers.AccountSerializer(user)
-    return response.Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
+    return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
