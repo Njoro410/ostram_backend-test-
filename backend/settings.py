@@ -54,6 +54,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -95,7 +97,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # }
 
 
-<<<<<<< HEAD
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -105,9 +107,7 @@ DATABASES = {
 
     }
 }
-=======
 
->>>>>>> a825203cee240bbed11ea15f3e9d7625f2004c59
 
 # DATABASES = {
 #     'default': {
@@ -119,16 +119,16 @@ DATABASES = {
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': '2HLeLOrw4qMOB4Z2bS3c',
-        'HOST': 'containers-us-west-193.railway.app',
-        'PORT': '7801',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'railway',
+#         'USER': 'postgres',
+#         'PASSWORD': '2HLeLOrw4qMOB4Z2bS3c',
+#         'HOST': 'containers-us-west-193.railway.app',
+#         'PORT': '7801',
+#     }
+# }
 
 
 # Password validation
@@ -178,18 +178,19 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': 'Wvv4aKo6RaPdIuGyK3gFYveBcb4'
 }
 
-<<<<<<< HEAD
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000"
+    "http://localhost:5173"
 ]
+# CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000"
+    "http://localhost:5173"
 ]
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 SESSION_COOKIE_SECURE = True
@@ -198,7 +199,7 @@ SESSION_COOKIE_SAMESITE = "None"
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -237,21 +238,20 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 
 
-    # custom
+     # custom
     'AUTH_COOKIE': 'access',
     # Cookie name. Enables cookies if value is set.
     'AUTH_COOKIE_REFRESH': 'refresh',
     # A string like "example.com", or None for standard domain cookie.
     'AUTH_COOKIE_DOMAIN': None,
     # Whether the auth cookies should be secure (https:// only).
-    'AUTH_COOKIE_SECURE': False,
+    'AUTH_COOKIE_SECURE': True, 
     # Http only cookie flag.It's not fetch by javascript.
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_PATH': '/',        # The path of the auth cookie.
     # Whether to set the flag restricting cookie leaks on cross-site requests. This can be 'Lax', 'Strict', or None to disable the flag.
-    'AUTH_COOKIE_SAMESITE': "None",  # TODO: Modify to Lax
+    'AUTH_COOKIE_SAMESITE': "None", # TODO: Modify to Lax
 }
-
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -265,6 +265,3 @@ REST_FRAMEWORK = {
 
 
 AUTH_USER_MODEL = "authentication.staffAccount"
-=======
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
->>>>>>> a825203cee240bbed11ea15f3e9d7625f2004c59
