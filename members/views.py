@@ -2,8 +2,9 @@ from rest_framework import generics, status
 from rest_framework.pagination import PageNumberPagination
 from .models import *
 from .serializers import MemberSerializer, ResidentialAreaSerializer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class StandardResultSetPagination(PageNumberPagination):
@@ -16,7 +17,9 @@ class StandardResultSetPagination(PageNumberPagination):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticatedOrReadOnly])
 def members_list(request):
+
     """
     GET, POST
     List all members and creates new members.
@@ -31,7 +34,7 @@ def members_list(request):
         return Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == "POST":
-        serializer = MemberSerializer(data=request.data)
+        serializer = MemberSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "Member created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
@@ -79,7 +82,7 @@ def residential_list(request):
             return Response({'Error': 'There are no residential areas'}, status=status.HTTP_404_NOT_FOUND)
         serializer = ResidentialAreaSerializer(residentials, many=True)
         pagination_class = StandardResultSetPagination
-        return Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == "POST":
         serializer = ResidentialAreaSerializer(data=request.data)

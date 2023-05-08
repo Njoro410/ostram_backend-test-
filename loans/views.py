@@ -60,7 +60,7 @@ def get_all_loans(request):
     if not loans:
         return Response({'detail': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
     serializer = LoanSerializer(loans, many=True)
-    return Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
+    return Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
