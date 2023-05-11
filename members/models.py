@@ -37,3 +37,5 @@ class members(models.Model):
 
   class Meta:
     db_table = 'members'
+    
+    
