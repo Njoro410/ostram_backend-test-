@@ -31,6 +31,15 @@ class Loan_Type(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Loan_Status(models.Model):
+    status_name = models.CharField(max_length=60, null=True,blank=True)
+    
+    class Meta:
+        db_table = "loan_status"
+        
+    def __str__(self):
+        return self.status_name
 
 
 class Loans(models.Model):
@@ -38,9 +47,9 @@ class Loans(models.Model):
         members, on_delete=models.DO_NOTHING, related_name='borrower')
     loan_type = models.ForeignKey(Loan_Type, on_delete=models.DO_NOTHING)
     amount = models.DecimalField(max_digits=8, decimal_places=2)
-    status = models.CharField(max_length=200, choices=STATUS_CHOICES)
-    application_date = models.DateField(auto_now_add=False)
-    issue_date = models.DateField(auto_now_add=False)
+    status = models.ForeignKey(Loan_Status, on_delete=models.DO_NOTHING)
+    application_date = models.DateField(blank=True,null=True)
+    issue_date = models.DateField(blank=True,null=True)
     # repayment_date = models.DateField(auto_now_add=False)
     guarantors = models.ManyToManyField(members, related_name='guarantors')
     payment_frequency = models.CharField(
@@ -62,6 +71,8 @@ class Loans(models.Model):
     @property
     def borrower_membership_number(self):
         return self.lendee.mbr_no
+    
+    
 
 
 class Documents(baseModel):
