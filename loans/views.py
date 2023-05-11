@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Loans, Loan_Type, Documents, documentType
-from .serializers import LoanTypeSerializer, LoanSerializer, LoanDocumentSerializer
+from .models import Loans, Loan_Type, Documents, documentType, Loan_Status
+from .serializers import LoanTypeSerializer, LoanSerializer, LoanDocumentSerializer,LoanStatusSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -17,13 +17,13 @@ def loan_types_get_add(request):
     if request.method == 'GET':
         types = Loan_Type.objects.all()
         serializer = LoanTypeSerializer(types, many=True)
-        return Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
         serializer = LoanTypeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Loan type created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
+            return Response({"message": "Loan type created successfully", "results": serializer.data}, status=status.HTTP_201_CREATED)
         return Response({"message": "Loan type creation failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -51,6 +51,27 @@ def loantype_detail(request, id):
     elif request.method == 'DELETE':
         loantype.delete()
         return Response({"message": "Loan type deleted successfullly"}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+# a function got getting and creating loan status
+def loan_status(request):
+    if request.method == 'GET':
+        try: 
+            loan_status = Loan_Status.objects.all()
+        except Loan_Status.DoesNotExist():
+            return Response({'Error': 'Loan status not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = LoanStatusSerializer(loan_status, many=True)
+        return Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
+    
+    elif request.method == "POST":
+        serializer = LoanStatusSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Loan status created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"message": "Loan status creation failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['GET'])
@@ -89,7 +110,7 @@ def loan_documents_by_loan_id(request, loan_id):
     try:
         loan = get_object_or_404(Loans, id=loan_id)
         documents = Documents.objects.filter(loan=loan)
-    except Loans.DoesNotExist: 
+    except Loans.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
