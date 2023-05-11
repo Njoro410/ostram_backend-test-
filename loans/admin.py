@@ -6,6 +6,7 @@ admin.site.register(Loan_Type)
 # admin.site.register(Loans)
 admin.site.register(Documents)
 admin.site.register(documentType)
+admin.site.register(Loan_Status)
 
 class LoanForm(forms.ModelForm):
     class Meta:
