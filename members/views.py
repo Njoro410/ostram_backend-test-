@@ -31,13 +31,13 @@ def members_list(request):
             return Response({'Error': 'There are no members'}, status=status.HTTP_404_NOT_FOUND)
         serializer = MemberSerializer(all_members, many=True)
         pagination_class = StandardResultSetPagination
-        return Response({"message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == "POST":
         serializer = MemberSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Member created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
+            return Response({"message": "Member created successfully", "results": serializer.data}, status=status.HTTP_201_CREATED)
         else:
             return Response({"message": "Member creation failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -55,13 +55,13 @@ def member_detail(request, member_no):
 
     if request.method == 'GET':
         serializer = MemberSerializer(member)
-        return Response({"message": "Success", "data": serializer.data})
+        return Response({"message": "Success", "results": serializer.data})
 
     elif request.method == 'PUT':
         serializer = MemberSerializer(member, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Member updated successfully", "data": serializer.data}, status=status.HTTP_202_ACCEPTED)
+            return Response({"message": "Member updated successfully", "results": serializer.data}, status=status.HTTP_202_ACCEPTED)
         else:
             return Response({"message": "Member update failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -105,14 +105,14 @@ def residential_area_detail(request, residential_id):
 
     if request.method == 'GET':
         serializer = ResidentialAreaSerializer(residential_area)
-        return Response({"message": "Success", "data": serializer.data})
+        return Response({"message": "Success", "results": serializer.data})
 
     elif request.method == 'PUT':
         serializer = ResidentialAreaSerializer(
             residential_area, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Residential area updated successfully", "data": serializer.data}, status=status.HTTP_202_ACCEPTED)
+            return Response({"message": "Residential area updated successfully", "results": serializer.data}, status=status.HTTP_202_ACCEPTED)
         else:
             return Response({"message": "Residential area update failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
