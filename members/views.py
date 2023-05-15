@@ -4,7 +4,7 @@ from .models import *
 from .serializers import MemberSerializer, ResidentialAreaSerializer
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+# from rest_framework.permissions import IsAuthenticated
 
 
 class StandardResultSetPagination(PageNumberPagination):
@@ -17,7 +17,7 @@ class StandardResultSetPagination(PageNumberPagination):
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticatedOrReadOnly])
+# @permission_classes([IsAuthenticated])
 def members_list(request):
 
     """
@@ -119,3 +119,17 @@ def residential_area_detail(request, residential_id):
     elif request.method == 'DELETE':
         residential_area.delete()
         return Response({"message": "residential area deleted successfullly"}, status=status.HTTP_204_NO_CONTENT)
+    
+    
+@api_view(['POST'])
+def daily_collection(request, member_no):
+    # Add daily member contributions
+    try:
+        member = members.objects.get(mbr_no=member_no)
+    except members.DoesNotExist:
+        return Response({'message': 'Member does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+    
+    
+
+
+
