@@ -1,46 +1,45 @@
 from django.db import models
-from members.models import residential_areas
+from members.models import residential_areas,members
 from django.contrib.auth.models import User
 from .choices import *
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
+from authentication.models import baseModel
 # Create your models here.
 
 
-class baseModel(models.Model):
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applicationcreator', blank=True, null=True)
-    created_on = models.DateTimeField(auto_now_add=True, blank=True)
-    updated_on = models.DateTimeField(auto_now=True, blank=True)
-    updated_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, related_name='applicationupdater', null=True)
-    branch = models.ForeignKey(
-        'Branch', on_delete=models.CASCADE, default=1, null=True)
+# class baseModel(models.Model):
+#     created_by = models.ForeignKey(
+#         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='instance_creator', blank=True, null=True)
+#     created_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+#     updated_on = models.DateTimeField(auto_now=True, blank=True, null=True)
+#     updated_by = models.ForeignKey(
+#         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, blank=True, related_name='instance_updater', null=True)
 
-    class Meta:
-        db_table = "base_model"
+#     class Meta:
+#         db_table = "base_model"
 
 
-class Branch(models.Model):
-    full_address = models.CharField(max_length=200, null=True, blank=True)
-    location = models.ForeignKey(residential_areas, on_delete=models.CASCADE)
-    phone = PhoneNumberField(blank=True, null=True)
-    email = models.EmailField(null=True, blank=True)
-    manager = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, related_name='branch_manager')
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, related_name='created_by_on_branch')
-    created_on = models.DateField(auto_now_add=True)
-    updated_on = models.DateField(auto_now=True)
-    updated_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, related_name='updated_by_branch')
+# class Branch(models.Model):
+#     full_address = models.CharField(max_length=200, null=True, blank=True)
+#     location = models.ForeignKey(residential_areas, on_delete=models.CASCADE)
+#     phone = PhoneNumberField(blank=True, null=True)
+#     email = models.EmailField(null=True, blank=True)
+#     manager = models.ForeignKey(
+#         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, related_name='branch_manager')
+#     created_by = models.ForeignKey(
+#         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, related_name='created_by_on_branch')
+#     created_on = models.DateField(auto_now_add=True)
+#     updated_on = models.DateField(auto_now=True)
+#     updated_by = models.ForeignKey(
+#         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, related_name='updated_by_branch')
     
     
-    class Meta:
-        db_table = "branch"
+#     class Meta:
+#         db_table = "branch"
 
-    def __str__(self):
-        return self.location.name
+#     def __str__(self):
+#         return self.location.name
 
 
 # class Staff(baseModel):
@@ -71,18 +70,17 @@ class Branch(models.Model):
 #         return self.fullname
 
 
-class globalCharges(models.Model):
-    name = models.CharField(max_length=50)
-    maintenance_fee = models.DecimalField(max_digits=5, decimal_places=2)
-    late_charges = models.DecimalField(max_digits=5, decimal_places=2)
-    loan_form = models.DecimalField(max_digits=5, decimal_places=2)
-    general_charges = models.DecimalField(max_digits=5, decimal_places=2)
-    affidavit_fee = models.DecimalField(max_digits=5, decimal_places=2)
-    passbook = models.DecimalField(max_digits=5, decimal_places=2)
+class globalCharges(baseModel):
+    member = models.ForeignKey(members, on_delete=models.DO_NOTHING, null=True, blank=True)
+    maintenance_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    general_charges = models.DecimalField(max_digits=10, decimal_places=2)
+    affidavit_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    passbook = models.DecimalField(max_digits=10, decimal_places=2)
+    registration_fee = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
     
     class Meta:
         db_table = "global_charges"
     
     def __str__(self):
-        return self.name
+        return self.name 
     
