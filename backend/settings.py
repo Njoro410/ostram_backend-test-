@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
+    'stats'
 
 ]
 
@@ -101,7 +102,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sacco1',
+        'NAME': 'sacco',
         'USER': 'brian',
         'PASSWORD': '123456',
 
@@ -196,6 +197,7 @@ CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_HTTP_ONLY = True
 
 
 SIMPLE_JWT = {
