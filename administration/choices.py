@@ -66,15 +66,27 @@ DOCUMENT_TYPE_CHOICES = (
     ('Drivers License', 'Drivers License'),
 )
 
-DOCUMENT_TYPE_CHOICES=(
-	('National ID','National ID'),
-	('Passport','Passport'),
-	('KRA Pin','KRA Pin'),
-	('Drivers License','Drivers License'),
+DOCUMENT_TYPE_CHOICES = (
+    ('National ID', 'National ID'),
+    ('Passport', 'Passport'),
+    ('KRA Pin', 'KRA Pin'),
+    ('Drivers License', 'Drivers License'),
 )
 
 ROLES = (
         ('Admin', 'Admin'),
         ('User', 'User'),
-    )
+)
 
+LOAN_STATUS_CHOICES = (
+    ('APPROVED', 'Approved'),
+    ('DENIED', 'Denied'),
+    ('PENDING', 'Pending'),
+    ('IN_PROGRESS', 'In Progress'),
+    ('DISBURSED', 'Disbursed'),
+    ('REPAID', 'Repaid'),
+    ('DEFAULT', 'Default'),
+    ('CLOSED', 'Closed'),
+    ('CANCELLED', 'Cancelled'),
+    ('ON_HOLD', 'On Hold'),
+)
