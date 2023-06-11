@@ -4,6 +4,7 @@ from .models import *
 
 
 class MemberSerializer(serializers.ModelSerializer):
+    residential = serializers.CharField(source="residential.name", read_only=True)
     class Meta:
         model = members
         fields = ('__all__')
