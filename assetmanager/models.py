@@ -1,6 +1,5 @@
 from django.db import models
 from administration.choices import *
-from authentication.models import baseModel
 from members.models import members
 from loans.models import Loans
 # from administration.models import Branch

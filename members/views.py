@@ -130,6 +130,8 @@ def daily_collection(request, member_no):
         return Response({'message': 'Member does not exist'}, status=status.HTTP_404_NOT_FOUND) 
     
     
+    
+    
 
 
 

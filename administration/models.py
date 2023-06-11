@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .choices import *
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
-from authentication.models import baseModel
+
 # Create your models here.
 
 
@@ -70,13 +70,19 @@ from authentication.models import baseModel
 #         return self.fullname
 
 
-class globalCharges(baseModel):
+class globalCharges(models.Model):
     member = models.ForeignKey(members, on_delete=models.DO_NOTHING, null=True, blank=True)
     maintenance_fee = models.DecimalField(max_digits=10, decimal_places=2)
     general_charges = models.DecimalField(max_digits=10, decimal_places=2)
     affidavit_fee = models.DecimalField(max_digits=10, decimal_places=2)
     passbook = models.DecimalField(max_digits=10, decimal_places=2)
     registration_fee = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='globalCharges_instance_creator', blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_on = models.DateTimeField(auto_now=True, blank=True, null=True)
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, blank=True, related_name='globalCharges_instance_updater', null=True)
     
     class Meta:
         db_table = "global_charges"

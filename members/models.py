@@ -1,7 +1,7 @@
 from django.db import models
 from administration.choices import *
 from django.conf import settings
-from authentication.models import baseModel
+
 
 # Create your models here.
 

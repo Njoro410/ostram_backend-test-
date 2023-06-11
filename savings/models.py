@@ -1,6 +1,5 @@
 from django.db import models
 from members.models import members
-from authentication.models import baseModel
 from django.conf import settings
 # Create your models here.
 

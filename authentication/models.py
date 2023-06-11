@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from administration.choices import *
 from phonenumber_field.modelfields import PhoneNumberField
 from .managers import AccountManager
+from django.conf import settings
 # Create your models here.
 
 class staffAccount(AbstractBaseUser):
@@ -41,3 +42,5 @@ class staffAccount(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+

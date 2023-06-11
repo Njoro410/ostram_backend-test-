@@ -1,7 +1,6 @@
 from django.db import models
 from members.models import members
 from administration.choices import *
-from authentication.models import baseModel
 from django.core.exceptions import ValidationError
 from django.conf import settings
 
