@@ -1,11 +1,17 @@
 from django.db import models
 from members.models import members
-from administration.models import baseModel
-
+from authentication.models import baseModel
+from django.conf import settings
 # Create your models here.
-class Deposits_Account(baseModel):
+class Deposits_Account(models.Model):
     account_owner = models.ForeignKey(members, on_delete=models.CASCADE, related_name='deposits_account')  
-    balance = models.DecimalField(max_digits=8, decimal_places=2)
+    deposits_balance = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='deposits_instance_creator', blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_on = models.DateTimeField(auto_now=True, blank=True, null=True)
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, blank=True, related_name='deposits_instance_updater', null=True)
     
     class Meta:
         db_table = "deposits_account"
