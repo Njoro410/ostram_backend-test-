@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-vf=q+edg)ec--lm#yqf6^dzztt1=)gun8&c%*$)0+h%p7_n0kp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://ost-sacco-management-system.vercel.app/']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -166,14 +166,14 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 CORS_ALLOWED_ORIGINS = [
-    "https://ost-sacco-management-system.vercel.app/", 'https://web-production-7b2fc.up.railway.app/'
+    "*",
 ]
 # CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_TRUSTED_ORIGINS = [
-    "https://ost-sacco-management-system.vercel.app/"
+    "*"
 ]
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 SESSION_COOKIE_SECURE = True
