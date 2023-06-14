@@ -5,15 +5,15 @@ from members.models import members
 
 
 class LoanDocumentTypeSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = documentType
-        fields = ['name','description']
+        fields = ['id', 'name', 'description']
 
 
 class LoanTypeSerializer(serializers.ModelSerializer):
     documents = LoanDocumentTypeSerializer(many=True, read_only=True)
-    
+
     class Meta:
         model = Loan_Type
         fields = "__all__"
@@ -49,6 +49,27 @@ class LoanSerializer(serializers.ModelSerializer):
 
 
 class LoanDocumentSerializer(serializers.ModelSerializer):
+    document_type = serializers.SerializerMethodField()
+    loan_owner = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    created_by = serializers.SerializerMethodField()
+
+    def get_document_type(self, document):
+        _type = document.document_type
+        return _type.name
+    
+    def get_loan_owner(self,document_loan):
+        lendee = document_loan.loan.lendee.names
+        return lendee
+    
+    def get_status(self,document):
+        status = document.status.status_name
+        return status
+    
+    def get_created_by(self,document_creator):
+        name = document_creator.created_by.fullname
+        return name
+
     class Meta:
         model = Documents
         fields = "__all__"

@@ -107,6 +107,7 @@ class Documents(models.Model):
         Loans, on_delete=models.CASCADE, null=True, related_name='loan_documents')
     document_type = models.ForeignKey(
         'documentType', on_delete=models.CASCADE, null=True)
+    status = models.ForeignKey("Document_Status", on_delete=models.PROTECT)
     file = models.FileField(upload_to='documents/')
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='documents_instance_creator', blank=True, null=True)
@@ -119,7 +120,22 @@ class Documents(models.Model):
         db_table = "documents"
 
     def __str__(self):
-        return f" {self.document_type.name}"
+        return f" {self.loan.lendee.names}'s {self.document_type.name}"
+    
+class Document_Status(models.Model):
+    status_name = models.CharField(max_length=60, null=True, blank=True, choices=DOCUMENT_STATUS_CHOICES)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='DocumentStatus_instance_creator', blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_on = models.DateTimeField(auto_now=True, blank=True, null=True)
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, blank=True, related_name='DocumentStatus_instance_updater', null=True)
+
+    class Meta:
+        db_table = "document_status"
+
+    def __str__(self):
+        return self.status_name
 
 
 class documentType(models.Model):

@@ -1,0 +1,1 @@
+web: gunicorn ostram_backend.wsgi

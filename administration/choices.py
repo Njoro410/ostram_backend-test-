@@ -90,3 +90,9 @@ LOAN_STATUS_CHOICES = (
     ('CANCELLED', 'Cancelled'),
     ('ON_HOLD', 'On Hold'),
 )
+
+DOCUMENT_STATUS_CHOICES = (
+    ('ACCEPTED', 'Accepted'),
+    ('REJECTED', 'Rejected'),
+    ('PENDING', 'Pending'),
+)

@@ -5,6 +5,7 @@ from django import forms
 admin.site.register(Loan_Type)
 # admin.site.register(Loans)
 admin.site.register(Documents)
+admin.site.register(Document_Status)
 admin.site.register(documentType)
 admin.site.register(Loan_Status)
 admin.site.register(LoanRepayment)

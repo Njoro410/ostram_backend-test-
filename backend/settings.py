@@ -90,46 +90,30 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+
+
+
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'sacco',
+#         'USER': 'brian',
+#         'PASSWORD': '123456',
+
 #     }
 # }
-
 
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sacco',
-        'USER': 'brian',
-        'PASSWORD': '123456',
-
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'ig6MG2oMbt23xfXbTb13',
+        'HOST': 'containers-us-west-39.railway.app',
+        'PORT': '6183',
     }
 }
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'sms',
-#         'USER': 'brian',
-#         'PASSWORD': '123456',
-        
-#     }
-# }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'railway',
-#         'USER': 'postgres',
-#         'PASSWORD': '2HLeLOrw4qMOB4Z2bS3c',
-#         'HOST': 'containers-us-west-193.railway.app',
-#         'PORT': '7801',
-#     }
-# }
 
 
 # Password validation
@@ -201,7 +185,7 @@ CSRF_COOKIE_HTTP_ONLY = True
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=50),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
