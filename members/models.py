@@ -6,7 +6,7 @@ from django.conf import settings
 # Create your models here.
 
 
-class residential_areas(models.Model):
+class ResidentialAreas(models.Model):
     area_code = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True)
     latitude = models.DecimalField(
@@ -27,14 +27,14 @@ class residential_areas(models.Model):
         return self.name
 
 
-class members(models.Model):
+class Members(models.Model):
     names = models.CharField(max_length=255, null=True, blank=True)
     mbr_no = models.IntegerField(primary_key=True)
     id_no = models.IntegerField(blank=True, null=True)
     gender = models.CharField(null=True, blank=True,
                               max_length=255, choices=GENDER_CHOICES)
     residential = models.ForeignKey(
-        residential_areas, on_delete=models.DO_NOTHING, null=True, blank=True)
+        ResidentialAreas, on_delete=models.DO_NOTHING, null=True, blank=True)
     phone_no = models.CharField(blank=True, null=True, max_length=255)
     next_of_kin = models.CharField(max_length=255, null=True, blank=True)
     phone_nos = models.CharField(blank=True, null=True, max_length=255)

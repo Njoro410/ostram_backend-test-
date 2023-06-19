@@ -6,7 +6,7 @@ from .models import *
 class MemberSerializer(serializers.ModelSerializer):
     residential = serializers.CharField(source="residential.name", read_only=True)
     class Meta:
-        model = members
+        model = Members
         fields = ('__all__')
 
     def save(self, **kwargs):
@@ -17,5 +17,5 @@ class MemberSerializer(serializers.ModelSerializer):
 
 class ResidentialAreaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = residential_areas
+        model = ResidentialAreas
         fields = ('__all__')

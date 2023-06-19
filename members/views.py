@@ -26,8 +26,8 @@ def members_list(request):
     """
     if request.method == 'GET':
         try:
-            all_members = members.objects.all()
-        except members.DoesNotExist:
+            all_members = Members.objects.all()
+        except Members.DoesNotExist:
             return Response({'Error': 'There are no members'}, status=status.HTTP_404_NOT_FOUND)
         serializer = MemberSerializer(all_members, many=True)
         pagination_class = StandardResultSetPagination
@@ -49,8 +49,8 @@ def member_detail(request, member_no):
     Display individual member by member no. Can update, view and delete member"""
 
     try:
-        member = members.objects.get(mbr_no=member_no)
-    except members.DoesNotExist:
+        member = Members.objects.get(mbr_no=member_no)
+    except Members.DoesNotExist:
         return Response({'message': 'Member does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
@@ -77,8 +77,8 @@ def residential_list(request):
     """
     if request.method == 'GET':
         try:
-            residentials = residential_areas.objects.all()
-        except residential_areas.DoesNotExist:
+            residentials = ResidentialAreas.objects.all()
+        except ResidentialAreas.DoesNotExist:
             return Response({'Error': 'There are no residential areas'}, status=status.HTTP_404_NOT_FOUND)
         serializer = ResidentialAreaSerializer(residentials, many=True)
         pagination_class = StandardResultSetPagination
@@ -99,8 +99,8 @@ def residential_area_detail(request, residential_id):
     Display, update or delete residential area
     """
     try:
-        residential_area = residential_areas.objects.get(pk=residential_id)
-    except residential_areas.DoesNotExist:
+        residential_area = ResidentialAreas.objects.get(pk=residential_id)
+    except ResidentialAreas.DoesNotExist:
         return Response({'message': 'Residential area does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
@@ -125,8 +125,8 @@ def residential_area_detail(request, residential_id):
 def daily_collection(request, member_no):
     # Add daily member contributions
     try:
-        member = members.objects.get(mbr_no=member_no)
-    except members.DoesNotExist:
+        member = Members.objects.get(mbr_no=member_no)
+    except Members.DoesNotExist:
         return Response({'message': 'Member does not exist'}, status=status.HTTP_404_NOT_FOUND) 
     
     

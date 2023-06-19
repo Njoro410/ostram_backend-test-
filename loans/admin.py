@@ -2,12 +2,12 @@ from django.contrib import admin
 from .models import *
 from django import forms
 # Register your models here.
-admin.site.register(Loan_Type)
+admin.site.register(LoanProduct)
 # admin.site.register(Loans)
 admin.site.register(Documents)
-admin.site.register(Document_Status)
-admin.site.register(documentType)
-admin.site.register(Loan_Status)
+admin.site.register(DocumentStatus)
+admin.site.register(DocumentType)
+admin.site.register(LoanStatus)
 admin.site.register(LoanRepayment)
 
 class LoanForm(forms.ModelForm):

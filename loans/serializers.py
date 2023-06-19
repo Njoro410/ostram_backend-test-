@@ -1,13 +1,14 @@
-from .models import Loans, Loan_Type, Documents, documentType, Loan_Status
+from .models import Loans, LoanProduct, Documents, DocumentType, LoanStatus
 from rest_framework import serializers
 # from members.serializers import MemberSerializer
-from members.models import members
+from members.models import Members
+from django.utils import timezone
 
 
 class LoanDocumentTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = documentType
+        model = DocumentType
         fields = ['id', 'name', 'description']
 
 
@@ -15,33 +16,45 @@ class LoanTypeSerializer(serializers.ModelSerializer):
     documents = LoanDocumentTypeSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Loan_Type
+        model = LoanProduct
         fields = "__all__"
 
 
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
-        model = members
+        model = Members
         fields = ['names', 'mbr_no', 'id_no']
 
 
 class LoanSerializer(serializers.ModelSerializer):
     guarantors = MemberSerializer(many=True)
     lendee = serializers.SerializerMethodField()
-    loan_type = serializers.SerializerMethodField()
+    loan_product = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+    is_grace_period = serializers.SerializerMethodField()
+    remaining_grace_period = serializers.SerializerMethodField()
 
     def get_lendee(self, loan):
-        lendee = loan.lendee
-        return lendee.names
+        lendee = loan.member.names
+        return lendee
 
-    def get_loan_type(self, loan):
-        _type = loan.loan_type
+    def get_loan_product(self, loan):
+        _type = loan.loan_product
         return _type.name
 
     def get_status(self, loan):
         status = loan.status
         return status.status_name
+    
+    def get_remaining_grace_period(self, loan):
+        remaining_days = (loan.start_date + timezone.timedelta(days=loan.grace_period) - timezone.now().date()).days
+        return remaining_days if remaining_days > 0 else 0
+    
+    def get_is_grace_period(self, loan):
+        remaining_days = (loan.start_date + timezone.timedelta(days=loan.grace_period) - timezone.now().date()).days
+        return 0 < remaining_days <= loan.grace_period
+
+    
 
     class Meta:
         model = Loans
@@ -59,7 +72,7 @@ class LoanDocumentSerializer(serializers.ModelSerializer):
         return _type.name
     
     def get_loan_owner(self,document_loan):
-        lendee = document_loan.loan.lendee.names
+        lendee = document_loan.loan.member.names
         return lendee
     
     def get_status(self,document):
@@ -77,5 +90,5 @@ class LoanDocumentSerializer(serializers.ModelSerializer):
 
 class LoanStatusSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Loan_Status
+        model = LoanStatus
         fields = "__all__"
