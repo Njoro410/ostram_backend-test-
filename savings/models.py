@@ -1,12 +1,12 @@
 from django.db import models
-from members.models import members
+from members.models import Members
 from django.conf import settings
 # Create your models here.
 
 
-class Savings_Account(models.Model):
+class SavingsAccount(models.Model):
     account_owner = models.ForeignKey(
-        members, on_delete=models.CASCADE, related_name='savings_account')
+        Members, on_delete=models.CASCADE, related_name='savings_account')
     savings_balance = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True)
     created_by = models.ForeignKey(

@@ -4,15 +4,15 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import SavingsSerializer
 from rest_framework import status
-from .models import Savings_Account
-from members.models import members
+from .models import SavingsAccount
+from members.models import Members
 from django.db.models import Sum
 # Create your views here.
 
 
 @api_view(['GET'])
 def get_total_savings(request):
-    total_savings = Savings_Account.objects.all().aggregate(Sum('balance'))[
+    total_savings = SavingsAccount.objects.all().aggregate(Sum('balance'))[
         'balance__sum']
     return Response({'total_savings': total_savings}, status=status.HTTP_200_OK)
 
@@ -21,9 +21,9 @@ def get_total_savings(request):
 # get savings based on member number
 def get_member_savings(request, member_no):
     try:
-        member = get_object_or_404(members, mbr_no=member_no)
-        savings = Savings_Account.objects.filter(account_owner=member)
-    except Savings_Account.DoesNotExist:
+        member = get_object_or_404(Members, mbr_no=member_no)
+        savings = SavingsAccount.objects.filter(account_owner=member)
+    except SavingsAccount.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':

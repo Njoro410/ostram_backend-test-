@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import Savings_Account
+from .models import SavingsAccount
 # Register your models here.
-admin.site.register(Savings_Account)
+admin.site.register(SavingsAccount)

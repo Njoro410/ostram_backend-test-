@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Deposits_Account
+from .models import DepositsAccount
 
 class DepositsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Deposits_Account
+        model = DepositsAccount
         fields = "__all__"
     

@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Savings_Account
+from .models import SavingsAccount
 
 class SavingsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Savings_Account
+        model = SavingsAccount
         fields = "__all__"
     

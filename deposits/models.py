@@ -1,9 +1,9 @@
 from django.db import models
-from members.models import members
+from members.models import Members
 from django.conf import settings
 # Create your models here.
-class Deposits_Account(models.Model):
-    account_owner = models.ForeignKey(members, on_delete=models.CASCADE, related_name='deposits_account')  
+class DepositsAccount(models.Model):
+    account_owner = models.ForeignKey(Members, on_delete=models.CASCADE, related_name='deposits_account')  
     deposits_balance = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='deposits_instance_creator', blank=True, null=True)
