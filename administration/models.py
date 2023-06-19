@@ -1,5 +1,5 @@
 from django.db import models
-from members.models import residential_areas,members
+from members.models import ResidentialAreas,Members
 from django.contrib.auth.models import User
 from .choices import *
 from phonenumber_field.modelfields import PhoneNumberField
@@ -71,7 +71,7 @@ from django.conf import settings
 
 
 class globalCharges(models.Model):
-    member = models.ForeignKey(members, on_delete=models.DO_NOTHING, null=True, blank=True)
+    member = models.ForeignKey(Members, on_delete=models.DO_NOTHING, null=True, blank=True)
     maintenance_fee = models.DecimalField(max_digits=10, decimal_places=2)
     general_charges = models.DecimalField(max_digits=10, decimal_places=2)
     affidavit_fee = models.DecimalField(max_digits=10, decimal_places=2)
