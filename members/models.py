@@ -44,9 +44,13 @@ class Members(models.Model):
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
     kra_pin = models.CharField(blank=True, null=True, max_length=60)
+    
+
 
     def __str__(self):
         return self.names
 
     class Meta:
         db_table = 'members'
+
+

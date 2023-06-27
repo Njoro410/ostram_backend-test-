@@ -91,27 +91,27 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'sacco',
-#         'USER': 'brian',
-#         'PASSWORD': '123456',
-
-#     }
-# }
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'ig6MG2oMbt23xfXbTb13',
-        'HOST': 'containers-us-west-39.railway.app',
-        'PORT': '6183',
+        'NAME': 'sacco',
+        'USER': 'brian',
+        'PASSWORD': '123456',
+
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'railway',
+#         'USER': 'postgres',
+#         'PASSWORD': 'ig6MG2oMbt23xfXbTb13',
+#         'HOST': 'containers-us-west-39.railway.app',
+#         'PORT': '6183',
+#     }
+# }
 
 
 # Password validation
@@ -166,17 +166,17 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 CORS_ALLOWED_ORIGINS = [
-    "https://ost-sacco-management-system.vercel.app"
+    "https://ost-sacco-management-system.vercel.app","http://localhost:5173"
 ]
 CORS_ORIGIN_WHITELIST = [
-    'https://ost-sacco-management-system.vercel.app',
+    'https://ost-sacco-management-system.vercel.app',"http://localhost:5173"
 ]
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_TRUSTED_ORIGINS = [
-    "https://ost-sacco-management-system.vercel.app"
+    "https://ost-sacco-management-system.vercel.app","http://localhost:5173"
 ]
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 SESSION_COOKIE_SECURE = True

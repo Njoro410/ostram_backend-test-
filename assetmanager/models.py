@@ -1,6 +1,6 @@
 from django.db import models
 from administration.choices import *
-from members.models import members
+from members.models import Members
 from loans.models import Loans
 # from administration.models import Branch
 from django.conf import settings
@@ -15,7 +15,7 @@ class loanAsset(models.Model):
     description = models.TextField(null=True)
     expiry_date = models.DateField(null=True,blank=True)
     inspection_date = models.DateField(null=True,blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, null=True)
+    status = models.CharField(max_length=20, choices=DOCUMENT_STATUS_CHOICES, null=True)
     value = models.IntegerField(null=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='loanAsset_instance_creator', blank=True, null=True)

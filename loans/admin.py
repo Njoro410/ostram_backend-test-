@@ -9,6 +9,7 @@ admin.site.register(DocumentStatus)
 admin.site.register(DocumentType)
 admin.site.register(LoanStatus)
 admin.site.register(LoanRepayment)
+admin.site.register(Installment)
 
 class LoanForm(forms.ModelForm):
     class Meta:

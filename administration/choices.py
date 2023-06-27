@@ -55,8 +55,8 @@ MESSAGE_STATUS = (
 )
 
 INTEREST_TYPE_CHOICES = (
-    ('Flat Rate', 'Flat Rate'),
-    ('Reducing Balance', 'Reducing Balance'),
+    ('Simple', 'Simple'),
+    ('Compounding', 'Compounding'),
 )
 
 DOCUMENT_TYPE_CHOICES = (
@@ -96,3 +96,5 @@ DOCUMENT_STATUS_CHOICES = (
     ('REJECTED', 'Rejected'),
     ('PENDING', 'Pending'),
 )
+
+
