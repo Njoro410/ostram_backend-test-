@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from members.models import Members
 from django.shortcuts import get_object_or_404
+from datetime import date
 # Create your views here.
 
 
@@ -83,7 +84,7 @@ def create_loan(request):
     return Response({"message": "Failed", "results": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(['GET','PUT'])
 # get loan by loan id
 def get_loans_by_loan_id(request, loan_id):
     try:
@@ -92,6 +93,49 @@ def get_loans_by_loan_id(request, loan_id):
         return Response({'message': 'Loan does not exist'}, status=status.HTTP_404_NOT_FOUND)
     serializer = LoanSerializer(loan)
     return Response({"message": "Success", "results": serializer.data}, status=status.HTTP_201_CREATED)
+
+
+@api_view(['PUT'])
+def update_loan(request, loan_id):
+    try:
+        loan = Loans.objects.get(id=loan_id)
+    except Loans.DoesNotExist:
+        return Response({'message': 'Loan does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+    new_status_id = request.data.get('id')
+    new_guarantors = request.data.get('guarantors')
+
+    if new_status_id:
+        try:
+            new_status = LoanStatus.objects.get(id=new_status_id)
+            # Update the loan status field in the database
+            Loans.objects.filter(id=loan_id).update(status=new_status)
+            
+                        # Check if the new status is "disbursed"
+            if new_status.status_name == "DISBURSED":
+                new_start_date = date.today()
+                Loans.objects.filter(id=loan_id).update(start_date=new_start_date)
+        except LoanStatus.DoesNotExist:
+            return Response({'message': 'Invalid status ID'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if new_guarantors:
+        loan.guarantors.clear()  # Clear existing guarantors
+        for guarantor_id in new_guarantors:
+            try:
+                guarantor = Members.objects.get(mbr_no=guarantor_id)
+                loan.guarantors.add(guarantor)
+            except Members.DoesNotExist:
+                return Response({'message': 'Invalid guarantor ID'}, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = LoanSerializer(loan)
+    return Response({"message": "Loan updated successfully", "results": serializer.data},
+                    status=status.HTTP_200_OK)
+
+
+
+
+
+        
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])

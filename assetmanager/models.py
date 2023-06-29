@@ -28,7 +28,7 @@ class loanAsset(models.Model):
         db_table = "loan_asset"
 
     def __str__(self):
-    	return f"{self.loan.lendee.names}'s {self.name}"
+    	return f"{self.loan.member.names}'s {self.name}"
  
 
 

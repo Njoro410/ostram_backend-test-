@@ -40,6 +40,7 @@ class LoanSerializer(serializers.ModelSerializer):
     is_grace_period = serializers.SerializerMethodField(read_only=True)
     remaining_grace_period = serializers.SerializerMethodField(read_only=True)
     interest_type = serializers.SerializerMethodField(read_only=True)
+    guarantors_list = serializers.SerializerMethodField()
 
 
     def get_lendee(self, loan):
@@ -67,6 +68,17 @@ class LoanSerializer(serializers.ModelSerializer):
     def get_interest_type(self, loan):
         _type = loan.loan_product.interest_type
         return _type
+    
+    def get_guarantors_list(self, loan):
+        guarantors = loan.guarantors.all()
+        guarantors_list = []
+        for guarantor in guarantors:
+            guarantor_data = {
+                'name': guarantor.names,
+                'mbr_no': guarantor.mbr_no
+            }
+            guarantors_list.append(guarantor_data)
+        return guarantors_list
 
 
     class Meta:
