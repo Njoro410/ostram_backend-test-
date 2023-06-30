@@ -47,7 +47,8 @@ class loginSerializer(serializers.ModelSerializer):
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ("username", "email","created_at", "title","role","fullname","phone_number","gender","dob","current_salary","reports_to")
+        fields = '__all__'
+        # fields = ("username", "email","created_at", "title","role","fullname","phone_number","gender","dob","current_salary","reports_to")
     
     
 

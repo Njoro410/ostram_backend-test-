@@ -70,7 +70,7 @@ def loan_status(request):
             data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Loan status created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
+            return Response({"message": "Loan status created successfully", "results": serializer.data}, status=status.HTTP_201_CREATED)
         else:
             return Response({"message": "Loan status creation failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 

@@ -26,6 +26,7 @@ urlpatterns = [
     path('api/members/',include('members.urls')),
     path('api/auth/',include(('authentication.urls','authentication'), namespace="authentication")),
     path('api/stats/',include('stats.urls')),
+    path('api/todos/',include('todo.urls')),
 
 
 ]

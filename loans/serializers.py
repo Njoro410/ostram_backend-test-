@@ -40,7 +40,7 @@ class LoanSerializer(serializers.ModelSerializer):
     is_grace_period = serializers.SerializerMethodField(read_only=True)
     remaining_grace_period = serializers.SerializerMethodField(read_only=True)
     interest_type = serializers.SerializerMethodField(read_only=True)
-    guarantors_list = serializers.SerializerMethodField()
+    guarantors_list = serializers.SerializerMethodField(read_only=True)
 
 
     def get_lendee(self, loan):
