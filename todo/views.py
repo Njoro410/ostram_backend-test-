@@ -61,3 +61,16 @@ def todo_by_id(request, id):
     elif request.method == 'DELETE':
         todo.delete()
         return Response({"message": "Todo deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+def get_public_todos(request):
+    try:
+        todos = Todo.objects.filter(public=True)
+    except Todo.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        serializer = TodoSerializer(todos, many=True)
+        return Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
+        
