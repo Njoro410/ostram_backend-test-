@@ -15,8 +15,9 @@ class ResidentialAreas(models.Model):
         max_digits=22, decimal_places=6, blank=True, null=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='residentialArea_instance_creator', blank=True, null=True)
-    created_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_on = models.DateTimeField(auto_now=True, blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
     updated_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, blank=True, related_name='residentialArea_instance_updater', null=True)
 
@@ -25,6 +26,7 @@ class ResidentialAreas(models.Model):
 
     def __str__(self):
         return self.name
+
 
 
 class Members(models.Model):
