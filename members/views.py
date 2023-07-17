@@ -81,7 +81,6 @@ def residential_list(request):
         except ResidentialAreas.DoesNotExist:
             return Response({'Error': 'There are no residential areas'}, status=status.HTTP_404_NOT_FOUND)
         serializer = ResidentialAreaSerializer(residentials, many=True)
-        pagination_class = StandardResultSetPagination
         return Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == "POST":

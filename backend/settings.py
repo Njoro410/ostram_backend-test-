@@ -13,6 +13,10 @@ import cloudinary_storage
 import cloudinary
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vf=q+edg)ec--lm#yqf6^dzztt1=)gun8&c%*$)0+h%p7_n0kp'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -51,7 +55,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
     'stats',
-    'todo'
+    'todo',
+    'mpesa'
 
 ]
 
@@ -92,27 +97,27 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'sacco',
-#         'USER': 'brian',
-#         'PASSWORD': '123456',
-
-#     }
-# }
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'pOUzwWZPNFrvI3MHQjbm',
-        'HOST': 'containers-us-west-137.railway.app',
-        'PORT': '5468',
+        'NAME': 'sacco',
+        'USER': 'brian',
+        'PASSWORD': '123456',
+
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'railway',
+#         'USER': 'postgres',
+#         'PASSWORD': 'pOUzwWZPNFrvI3MHQjbm',
+#         'HOST': 'containers-us-west-137.railway.app',
+#         'PORT': '5468',
+#     }
+# }
 
 
 # Password validation
@@ -253,3 +258,9 @@ REST_FRAMEWORK = {
 
 
 AUTH_USER_MODEL = "authentication.staffAccount"
+
+
+#M-PESA CONFIGURATIONS
+"CONSUMER_KEY=tBY1Ym1xojZEyLUx0NApj9jHd0XmqhVF"
+"CONSUMER_SECRET=A9wV8AzEGMwD0RTx"
+"PASS_KEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
