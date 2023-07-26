@@ -88,5 +88,5 @@ class globalCharges(models.Model):
         db_table = "global_charges"
     
     def __str__(self):
-        return self.name 
+        return self.member.names
     
