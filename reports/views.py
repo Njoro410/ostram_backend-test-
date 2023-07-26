@@ -18,7 +18,7 @@ def get_filtered_transactions(request):
     year = request.query_params.get('year')
     month = request.query_params.get('month')
 
-        # Validate the year parameter if provided
+    # Validate the year parameter if provided
     try:
         if year is not None:
             year = int(year)
