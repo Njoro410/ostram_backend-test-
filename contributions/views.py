@@ -8,14 +8,15 @@ from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def daily_contributions(request):
-
     if request.method == 'GET':
         year = request.query_params.get('year', datetime.datetime.now().year)
+        # month = request.query_params.get('month', datetime.datetime.now().month)
         month = request.query_params.get('month', None)
-        quarter = request.query_params.get('quarter', None)
-
+        start_month = request.query_params.get('start_month', None)
+        end_month = request.query_params.get('end_month', None)
+       
         try:
             all_contributions = DailyContributions.objects.all()
 
@@ -26,17 +27,11 @@ def daily_contributions(request):
             if month:
                 all_contributions = all_contributions.filter(received_date__month=month)
 
-            # Filter by quarter (assuming quarter is represented as 1, 2, 3, or 4)
-            if quarter:
-                try:
-                    quarter_num = int(quarter)
-                    if 1 <= quarter_num <= 4:
-                        quarter_months = [3 * quarter_num - 2, 3 * quarter_num - 1, 3 * quarter_num]
-                        all_contributions = all_contributions.filter(received_date__month__in=quarter_months)
-                    else:
-                        return Response({"error": "Invalid quarter. Quarter must be between 1 and 4."}, status=status.HTTP_400_BAD_REQUEST)
-                except ValueError:
-                    return Response({"error": "Invalid quarter. Quarter must be an integer between 1 and 4."}, status=status.HTTP_400_BAD_REQUEST)
+            # Filter by range
+            if start_month and end_month:
+                start_month = int(start_month)
+                end_month = int(end_month)
+                all_contributions = all_contributions.filter(received_date__month__range=[start_month, end_month])
 
         except DailyContributions.DoesNotExist:
             return Response({"error": "There are no daily contributions"},status=status.HTTP_404_NOT_FOUND)
@@ -44,10 +39,10 @@ def daily_contributions(request):
         return Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
     
     elif request.method == "POST":
+        # TODO: add code to distribute payments to various accounts 
         serializer = DailyContributionsSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "Contribution saved successfully", "results": serializer.data}, status=status.HTTP_201_CREATED)
-        # code to distribute values to different accounts
         else:
             return Response({"message": "Contribution posting failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

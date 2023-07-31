@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'stats',
     'todo',
     'mpesa',
-    'reports',
     'contributions',
 
 ]

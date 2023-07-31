@@ -37,7 +37,8 @@ class DailyContributions(models.Model):
 
     class Meta:
         db_table = "daily_contributions"
-        ordering = ["-received_date"]
+        ordering = ['received_date']
+
 
     def __str__(self):
         return f"{self.account_no.names}'s {self.received_date}"
