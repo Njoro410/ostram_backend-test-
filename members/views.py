@@ -127,10 +127,4 @@ def daily_collection(request, member_no):
         member = Members.objects.get(mbr_no=member_no)
     except Members.DoesNotExist:
         return Response({'message': 'Member does not exist'}, status=status.HTTP_404_NOT_FOUND) 
-    
-    
-    
-    
-
-
 
