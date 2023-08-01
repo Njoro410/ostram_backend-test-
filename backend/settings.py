@@ -97,27 +97,27 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'sacco',
-#         'USER': 'brian',
-#         'PASSWORD': '123456',
-
-#     }
-# }
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'pOUzwWZPNFrvI3MHQjbm',
-        'HOST': 'containers-us-west-137.railway.app',
-        'PORT': '5468',
+        'NAME': 'sacco',
+        'USER': 'brian',
+        'PASSWORD': '123456',
+
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'railway',
+#         'USER': 'postgres',
+#         'PASSWORD': 'pOUzwWZPNFrvI3MHQjbm',
+#         'HOST': 'containers-us-west-137.railway.app',
+#         'PORT': '5468',
+#     }
+# }
 
 
 # Password validation
@@ -196,7 +196,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
-    "UPDATE_LAST_LOGIN": False,
+    "UPDATE_LAST_LOGIN": True,
 
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
@@ -260,7 +260,4 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = "authentication.staffAccount"
 
 
-#M-PESA CONFIGURATIONS
-"CONSUMER_KEY=tBY1Ym1xojZEyLUx0NApj9jHd0XmqhVF"
-"CONSUMER_SECRET=A9wV8AzEGMwD0RTx"
-"PASS_KEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+

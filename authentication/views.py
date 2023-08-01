@@ -5,6 +5,8 @@ from rest_framework import exceptions as rest_exceptions, response, decorators a
 from rest_framework_simplejwt import tokens, views as jwt_views, serializers as jwt_serializers, exceptions as jwt_exceptions
 from rest_framework import status
 from . import serializers, models
+from django.contrib.auth.models import Permission,Group
+from django.contrib.auth.models import update_last_login
 # Create your views here.
 
 
@@ -12,7 +14,7 @@ def get_user_tokens(user):
     refresh = tokens.RefreshToken.for_user(user)
     return {
         "accessToken": str(refresh.access_token),
-        "refreshToken": str(refresh)  
+        "refreshToken": str(refresh)
     }
 
 
@@ -28,6 +30,7 @@ def loginView(request):
     user = authenticate(email=email, password=password)
 
     if user is not None:
+        update_last_login(None, user)
         tokens = get_user_tokens(user)
         res = response.Response()
         res.set_cookie(
@@ -60,13 +63,20 @@ def loginView(request):
 @rest_decorators.permission_classes([])
 def registerView(request):
     serializer = serializers.registrationSerializer(data=request.data)
-    serializer.is_valid()
 
-    user = serializer.save()
+    if serializer.is_valid():
+        required_fields = ["username", "email", "reports_to",
+                           "is_admin", "is_active", "is_staff", "is_superuser"]
+        for field_name in required_fields:
+            if field_name not in serializer.validated_data:
+                return response.Response({"message": "failed", "results": {field_name: ["This field may not be blank."]}}, status=status.HTTP_400_BAD_REQUEST)
 
-    if user is not None:
-       return response.Response({"message": "User registered succesfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
-    return response.Response({"message": "Could not create user", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        user = serializer.save()
+
+        if user is not None:
+            return response.Response({"message": "Staff registered successfully", "results": serializer.data}, status=status.HTTP_201_CREATED)
+
+    return response.Response({"message": "failed", "results": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @rest_decorators.api_view(['POST'])
@@ -130,4 +140,47 @@ def userDetails(request):
         return response.Response({"message": "User details not found"}, status=HTTP_404_NOT_FOUND)
 
     serializer = serializers.AccountSerializer(user)
+    return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
+
+
+@rest_decorators.api_view(["GET"])
+def all_users(request, user_id=None):
+    if request.method == 'GET':
+        if user_id is None:
+            try:
+                users = models.staffAccount.objects.all()
+            except models.staffAccount.DoesNotExist:
+                return response.Response({"message": "Users not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = serializers.AllAccountsSerializer(users, many=True)
+            return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
+        else:
+            try:
+                user = models.staffAccount.objects.get(id=user_id)
+            except models.staffAccount.DoesNotExist:
+                return response.Response({"message": "Users not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = serializers.AccountSerializer(user)
+            return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
+
+
+@rest_decorators.api_view(["GET"])
+def permission_list(request):
+    try:
+        permissions = Permission.objects.all()
+    except Permission.DoesNotExist:
+        return response.Response({"message": "No permissions found"}, status=HTTP_404_NOT_FOUND)
+
+    serializer = serializers.PermissionSerializer(permissions, many=True)
+    return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
+
+
+@rest_decorators.api_view(["GET"])
+def all_permission_groups(request):
+    try:
+        groups = Group.objects.all()
+    except Group.DoesNotExist:
+        return response.Response({"message": "No permissions groups found"}, status=HTTP_404_NOT_FOUND)
+
+    serializer = serializers.GroupSerializer(groups, many=True)
     return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)

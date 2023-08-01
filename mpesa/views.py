@@ -88,7 +88,7 @@ def make_mpesa_express_request(request):
         "PartyA": "254702855081",
         "PartyB": os.environ.get('BusinessShortCode'),
         "PhoneNumber": "254722770727",
-        "CallBackURL": "https://4e85-41-72-206-58.ngrok-free.app/api/transactions/mpesa_callback/",
+        "CallBackURL": "https://33a8-197-156-137-147.ngrok-free.app/api/transactions/mpesa_callback/",
         "AccountReference": "ostram",
         "TransactionDesc": "ostram"
     }
@@ -172,14 +172,14 @@ def transaction_status(request):
     }
 
     payload = {
-        "Initiator": "testapi",
+        "Initiator": "njoro410",
         "SecurityCredential": "OANvCkI0XxUo9rwmIP31lAxUbCmCBA4iWfOfH5L2WOENtDMDXowdrj0EfkYLPx68okHRUeZPeiaezI8SG8NA4hro/vltJVRJFDT/fX6emLEFVSNX8zoZDk/SzRsoSYynDZ9DAy9wrTpnkCwN3o8LZwaKkNzvD/DhbvaRXTPvFrGNXR441TmaGpSliS3tDk6fZ/4TIdmbabWTePYMDSwWr9X+P5O66lx+W8hViORiBJcOanGSOQI1b4P4680hc9We3tcE7Z0U1q0RQPeYXZXphRs++CaDR7XqmxeiQkazpmqUh5bF6b1Nymum+pwqgpux9hYRkOE7oWJ20MB5qoj9lg==",
         "CommandID": "TransactionStatusQuery",
         "TransactionID": "RGF0LLBYLW",
         "OriginatorConversationID":"",
         "PartyA": '174379',
         "IdentifierType": "4",
-        "ResultURL": "https://4e85-41-72-206-58.ngrok-free.app/api/transactions/transaction_status_callback/",
+        "ResultURL": "https://33a8-197-156-137-147.ngrok-free.app/api/transactions/transaction_status_callback/",
         "QueueTimeOutURL": "https://mydomain.com/TransactionStatus/queue/",
         "Remarks": "bla bla bla bla",
         "Occassion": "bla bla bla bla bla",
@@ -198,7 +198,7 @@ def transaction_status(request):
 def transaction_status_callback(request):
     if request.method == 'POST':
         result_body = request.body.decode('utf-8')
-        print(result_body)
+        print("transaction_status_callback::::",result_body)
         data = json.loads(result_body)
 
         # Extract values from the JSON
@@ -247,8 +247,8 @@ def c2b_confirmation_register(request):
     payload = {
         "ShortCode": '174379',
         "ResponseType": "Completed",
-        "ConfirmationURL": "https://4e85-41-72-206-58.ngrok-free.app/api/transactions/c2b_confirmation_callback",
-        "ValidationURL": "https://4e85-41-72-206-58.ngrok-free.app/api/transactions/c2b_confirmation_validation",
+        "ConfirmationURL": "https://33a8-197-156-137-147.ngrok-free.app/api/transactions/c2b_confirmation_callback",
+        "ValidationURL": "https://33a8-197-156-137-147.ngrok-free.app/api/transactions/c2b_confirmation_validation",
     }
 
     response = requests.post(api_url, headers=headers,
@@ -295,7 +295,7 @@ def c2b_confirmation_callback(request):
 def c2b_confirmation_validation(request):
     if request.method == 'POST':
         result_body = request.body.decode('utf-8')
-        print(result_body)
+        # print(result_body)
         
         return HttpResponse('Validation')
 
