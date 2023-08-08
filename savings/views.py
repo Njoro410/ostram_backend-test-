@@ -45,7 +45,7 @@ def get_member_savings(request, member_no):
     #     return Response({"message": "Savings Account updating failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        deposits.delete()
+        savings.delete()
         return Response({"message": "Savings Account deleted successfullly"}, status=status.HTTP_204_NO_CONTENT)
 
 

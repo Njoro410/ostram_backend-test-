@@ -26,7 +26,6 @@ class staffAccount(PermissionsMixin, AbstractBaseUser):
                              null=True, choices=TITLE_CHOICES)
     role = models.CharField(max_length=200, blank=True,
                             null=True, choices=ROLES)
-    # fullname = models.CharField(max_length=200, blank=True, null=True)
     first_name = models.CharField(max_length=200, blank=True, null=True)
     last_name = models.CharField(max_length=200, blank=True, null=True)
     phone_number = PhoneNumberField(blank=True, null=True)

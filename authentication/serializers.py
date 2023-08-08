@@ -119,6 +119,7 @@ class AllAccountsSerializer(serializers.ModelSerializer):
         model = staffAccount
         fields = ['id', 'email', 'username', 'first_name',
                   'last_name', 'is_admin', 'is_active']
+        
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -137,6 +138,17 @@ class PermissionSerializer(serializers.ModelSerializer):
         
 
 class GroupSerializer(serializers.ModelSerializer):
+    permissions = serializers.PrimaryKeyRelatedField(queryset=Permission.objects.all(), many=True)
+    permission_list = serializers.SerializerMethodField()
+
+    def get_permission_list(self, obj):
+        permission_dict_list = []
+        for permission in obj.permissions.all():
+            permission_dict = {'id': permission.id, 'name': permission.name}
+            permission_dict_list.append(permission_dict)
+        return permission_dict_list
+
     class Meta:
         model = Group
-        fields = ('id', 'name')
+        fields = ['id', 'name', 'permissions', 'permission_list']
+

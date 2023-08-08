@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/stats/',include('stats.urls')),
     path('api/todos/',include('todo.urls')),
     path('api/transactions/',include('mpesa.urls')),
+    path('api/contributions/', include('contributions.urls'))
 
 
 ]

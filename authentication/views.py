@@ -5,8 +5,9 @@ from rest_framework import exceptions as rest_exceptions, response, decorators a
 from rest_framework_simplejwt import tokens, views as jwt_views, serializers as jwt_serializers, exceptions as jwt_exceptions
 from rest_framework import status
 from . import serializers, models
-from django.contrib.auth.models import Permission,Group
+from django.contrib.auth.models import Permission, Group
 from django.contrib.auth.models import update_last_login
+from rest_framework.parsers import JSONParser 
 # Create your views here.
 
 
@@ -59,24 +60,24 @@ def loginView(request):
     return response.Response({"message": "Email or Password is incorrect!", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@rest_decorators.api_view(["POST"])
+@rest_decorators.api_view(["POST", "PUT"])
 @rest_decorators.permission_classes([])
 def registerView(request):
-    serializer = serializers.registrationSerializer(data=request.data)
 
-    if serializer.is_valid():
-        required_fields = ["username", "email", "reports_to",
-                           "is_admin", "is_active", "is_staff", "is_superuser"]
-        for field_name in required_fields:
-            if field_name not in serializer.validated_data:
-                return response.Response({"message": "failed", "results": {field_name: ["This field may not be blank."]}}, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'POST':
+        serializer = serializers.registrationSerializer(data=request.data)
 
-        user = serializer.save()
+        if serializer.is_valid():
+            required_fields = ["username", "email", "reports_to",
+                               "is_admin", "is_active", "is_staff", "is_superuser"]
+            for field_name in required_fields:
+                if field_name not in serializer.validated_data:
+                    return response.Response({"message": "failed", "results": {field_name: ["This field may not be blank."]}}, status=status.HTTP_400_BAD_REQUEST)
 
-        if user is not None:
-            return response.Response({"message": "Staff registered successfully", "results": serializer.data}, status=status.HTTP_201_CREATED)
+            user = serializer.save()
 
-    return response.Response({"message": "failed", "results": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            if user is not None:
+                return response.Response({"message": "Staff registered successfully", "results": serializer.data}, status=status.HTTP_201_CREATED)
 
 
 @rest_decorators.api_view(['POST'])
@@ -134,16 +135,17 @@ class CookieTokenRefreshView(jwt_views.TokenRefreshView):
 @rest_decorators.api_view(["GET"])
 @rest_decorators.permission_classes([rest_permissions.IsAuthenticated])
 def userDetails(request):
-    try:
-        user = models.staffAccount.objects.get(id=request.user.id)
-    except models.staffAccount.DoesNotExist:
-        return response.Response({"message": "User details not found"}, status=HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        try:
+            user = models.staffAccount.objects.get(id=request.user.id)
+        except models.staffAccount.DoesNotExist:
+            return response.Response({"message": "User details not found"}, status=HTTP_404_NOT_FOUND)
 
-    serializer = serializers.AccountSerializer(user)
-    return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
+        serializer = serializers.AccountSerializer(user)
+        return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
 
 
-@rest_decorators.api_view(["GET"])
+@rest_decorators.api_view(["GET", "PUT"])
 def all_users(request, user_id=None):
     if request.method == 'GET':
         if user_id is None:
@@ -163,6 +165,20 @@ def all_users(request, user_id=None):
             serializer = serializers.AccountSerializer(user)
             return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
 
+    elif request.method == 'PUT':
+        user = models.staffAccount.objects.get(id=user_id)
+        print(request.data)
+        # data = JSONParser().parse(request)
+        # print("user issss:",user)
+        # print("data issss:",data)
+        serializer = serializers.AccountSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return response.Response({"message": "Staff updated successfully", "results": serializer.data}, status=status.HTTP_202_ACCEPTED)
+        return response.Response({"message": "Staff updating failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+    return response.Response({"message": "failed", "results": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @rest_decorators.api_view(["GET"])
 def permission_list(request):
@@ -175,12 +191,32 @@ def permission_list(request):
     return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
 
 
-@rest_decorators.api_view(["GET"])
+@rest_decorators.api_view(["GET", "POST"])
 def all_permission_groups(request):
     try:
         groups = Group.objects.all()
     except Group.DoesNotExist:
         return response.Response({"message": "No permissions groups found"}, status=HTTP_404_NOT_FOUND)
 
-    serializer = serializers.GroupSerializer(groups, many=True)
-    return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
+    if request.method == 'GET':
+        serializer = serializers.GroupSerializer(groups, many=True)
+        return response.Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
+
+    elif request.method == 'POST':
+        serializer = serializers.GroupSerializer(data=request.data)
+        print(request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return response.Response({"message": "Permission group created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        return response.Response({"message": "Permission group creation failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
+    
+    
+
+
+
+
+
+

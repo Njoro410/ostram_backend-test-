@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'stats',
     'todo',
-    'mpesa'
+    'mpesa',
+    'contributions',
 
 ]
 
@@ -100,9 +101,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
         'NAME': 'sacco',
         'USER': 'brian',
         'PASSWORD': '123456',
+
 
     }
 }
