@@ -37,7 +37,7 @@ class DailyContributions(models.Model):
 
     class Meta:
         db_table = "daily_contributions"
-        ordering = ['received_date']
+        ordering = ['-received_date']
 
 
     def __str__(self):

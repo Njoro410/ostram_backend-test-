@@ -11,27 +11,8 @@ from rest_framework.permissions import IsAuthenticated
 # @permission_classes([IsAuthenticated])
 def daily_contributions(request):
     if request.method == 'GET':
-        year = request.query_params.get('year', datetime.datetime.now().year)
-        # month = request.query_params.get('month', datetime.datetime.now().month)
-        month = request.query_params.get('month', None)
-        start_month = request.query_params.get('start_month', None)
-        end_month = request.query_params.get('end_month', None)
-       
         try:
             all_contributions = DailyContributions.objects.all()
-
-            # Filter by year
-            all_contributions = all_contributions.filter(received_date__year=year)
-
-            # Filter by month
-            if month:
-                all_contributions = all_contributions.filter(received_date__month=month)
-
-            # Filter by range
-            if start_month and end_month:
-                start_month = int(start_month)
-                end_month = int(end_month)
-                all_contributions = all_contributions.filter(received_date__month__range=[start_month, end_month])
 
         except DailyContributions.DoesNotExist:
             return Response({"error": "There are no daily contributions"},status=status.HTTP_404_NOT_FOUND)
