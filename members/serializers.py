@@ -4,7 +4,8 @@ from .models import *
 
 
 class MemberSerializer(serializers.ModelSerializer):
-    residential = serializers.CharField(source="residential.name", read_only=True)
+    residential_name= serializers.CharField(source="residential.name", read_only=True)
+    residential = serializers.IntegerField(source="residential.area_code", read_only=True)
     class Meta:
         model = Members
         fields = ('__all__')
