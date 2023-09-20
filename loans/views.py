@@ -7,6 +7,7 @@ from rest_framework import status
 from members.models import Members
 from django.shortcuts import get_object_or_404
 from datetime import date
+from sms.utils import send_loan_status_sms,send_guarantors_text
 # Create your views here.
 
 
@@ -84,7 +85,7 @@ def create_loan(request):
     return Response({"message": "Failed", "results": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET','PUT'])
+@api_view(['GET', 'PUT'])
 # get loan by loan id
 def get_loans_by_loan_id(request, loan_id):
     try:
@@ -104,38 +105,44 @@ def update_loan(request, loan_id):
 
     new_status_id = request.data.get('id')
     new_guarantors = request.data.get('guarantors')
+    send_text = request.data.get('text')
+    clear_guarantors = request.data.get('clear')
+
 
     if new_status_id:
         try:
             new_status = LoanStatus.objects.get(id=new_status_id)
             # Update the loan status field in the database
             Loans.objects.filter(id=loan_id).update(status=new_status)
-            
-                        # Check if the new status is "disbursed"
+            if send_text:
+                send_loan_status_sms(loan_id,new_status.status_name)
+
+            # Check if the new status is "disbursed"
             if new_status.status_name == "DISBURSED":
                 new_start_date = date.today()
-                Loans.objects.filter(id=loan_id).update(start_date=new_start_date)
+                Loans.objects.filter(id=loan_id).update(
+                    start_date=new_start_date)
         except LoanStatus.DoesNotExist:
             return Response({'message': 'Invalid status ID'}, status=status.HTTP_400_BAD_REQUEST)
 
     if new_guarantors:
-        loan.guarantors.clear()  # Clear existing guarantors
+        if clear_guarantors:
+            loan.guarantors.clear()  # Clear existing guarantors
         for guarantor_id in new_guarantors:
             try:
                 guarantor = Members.objects.get(mbr_no=guarantor_id)
                 loan.guarantors.add(guarantor)
+                if send_text:
+                    send_guarantors_text(loan_id,guarantor_id)
             except Members.DoesNotExist:
                 return Response({'message': 'Invalid guarantor ID'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        if clear_guarantors:
+            loan.guarantors.clear()  # Clear existing guarantors
 
     serializer = LoanSerializer(loan)
     return Response({"message": "Loan updated successfully", "results": serializer.data},
                     status=status.HTTP_200_OK)
-
-
-
-
-
-        
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])

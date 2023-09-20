@@ -7,7 +7,7 @@ from rest_framework import status
 from . import serializers, models
 from django.contrib.auth.models import Permission, Group
 from django.contrib.auth.models import update_last_login
-from rest_framework.parsers import JSONParser 
+from rest_framework.parsers import JSONParser
 # Create your views here.
 
 
@@ -57,7 +57,7 @@ def loginView(request):
         return res
     # raise rest_exceptions.AuthenticationFailed(
     #     "Email or Password is incorrect!", code=status.HTTP_400_BAD_REQUEST)
-    return response.Response({"message": "Email or Password is incorrect!", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    return response.Response({"message": "Email or Password is incorrect!", "results": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @rest_decorators.api_view(["POST", "PUT"])
@@ -78,6 +78,7 @@ def registerView(request):
 
             if user is not None:
                 return response.Response({"message": "Staff registered successfully", "results": serializer.data}, status=status.HTTP_201_CREATED)
+    return response.Response({"message": "Staff registration failed", "results": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @rest_decorators.api_view(['POST'])
@@ -171,7 +172,8 @@ def all_users(request, user_id=None):
         # data = JSONParser().parse(request)
         # print("user issss:",user)
         # print("data issss:",data)
-        serializer = serializers.AccountSerializer(user, data=request.data, partial=True)
+        serializer = serializers.AccountSerializer(
+            user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return response.Response({"message": "Staff updated successfully", "results": serializer.data}, status=status.HTTP_202_ACCEPTED)
@@ -209,14 +211,15 @@ def all_permission_groups(request):
             serializer.save()
             return response.Response({"message": "Permission group created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
         return response.Response({"message": "Permission group creation failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-    
-    
-    
-    
-    
 
 
+@rest_decorators.api_view(["DELETE"])
+def delete_permission_group(request):
+    id = request.data.get('group')
+    try:
+        group = Group.objects.get(id=id)
+    except Group.DoesNotExist:
+        return response.Response({"message": "Permission group not found"}, status=status.HTTP_404_NOT_FOUND)
 
-
-
-
+    group.delete()
+    return response.Response({"message": "Permission group deleted successfully"}, status=status.HTTP_200_OK)

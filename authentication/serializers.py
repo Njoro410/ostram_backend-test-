@@ -73,9 +73,17 @@ class loginSerializer(serializers.ModelSerializer):
 
 
 class AccountSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = get_user_model()
         fields = '__all__'
+        
+        
+    def get_full_name(self, instance):
+        if instance.first_name and instance.last_name:
+            staff = f'{instance.first_name} {instance.last_name}'
+            return staff
+        return None
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -84,7 +92,7 @@ class AccountSerializer(serializers.ModelSerializer):
         representation['user_permissions'] = [
             {
                 'id': permission.id,
-                'name': permission.name,
+                'name': permission.name, 
             }
             for permission in permissions
         ]

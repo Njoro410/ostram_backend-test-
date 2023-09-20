@@ -1,8 +1,6 @@
 from django.db import models
 from administration.choices import *
 from django.conf import settings
-
-
 # Create your models here.
 
 
@@ -46,7 +44,7 @@ class Members(models.Model):
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
     kra_pin = models.CharField(blank=True, null=True, max_length=60)
-    
+
 
 
     def __str__(self):

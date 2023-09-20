@@ -11,4 +11,5 @@ urlpatterns = [
     path('all-users/', views.all_users, name='users-without-id'),
     path('user_id/<int:user_id>/', views.all_users, name='users-with-id'),
     path('all_permission_groups/', views.all_permission_groups, name='all_permission_groups'),
+    path('delete_permission_group/', views.delete_permission_group, name='delete_permission_group'),
 ]

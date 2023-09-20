@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'todo',
     'mpesa',
     'contributions',
+    'sms'
 
 ]
 

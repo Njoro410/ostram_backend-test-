@@ -5,6 +5,7 @@ from administration.choices import *
 from phonenumber_field.modelfields import PhoneNumberField
 from .managers import AccountManager
 from django.conf import settings
+from administration.models import Branch
 # Create your models here.
 
 
@@ -35,6 +36,8 @@ class staffAccount(PermissionsMixin, AbstractBaseUser):
     current_salary = models.IntegerField(blank=True, null=True)
     reports_to = models.ForeignKey(
         'self', on_delete=models.DO_NOTHING, related_name='manager', blank=True, null=True)
+    branch = models.ForeignKey(
+        Branch, on_delete=models.CASCADE, blank=True, null=True)
 
     objects = AccountManager()
 

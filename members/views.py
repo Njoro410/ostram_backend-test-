@@ -2,8 +2,9 @@ from rest_framework import generics, status
 from rest_framework.pagination import PageNumberPagination
 from .models import *
 from .serializers import MemberSerializer, ResidentialAreaSerializer
-from rest_framework.decorators import api_view,permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from sms.utils import send_welcome_sms
 # from rest_framework.permissions import IsAuthenticated
 
 
@@ -19,7 +20,6 @@ class StandardResultSetPagination(PageNumberPagination):
 @api_view(['GET', 'POST'])
 # @permission_classes([IsAuthenticated])
 def members_list(request):
-
     """
     GET, POST
     List all members and creates new members.
@@ -34,10 +34,17 @@ def members_list(request):
         return Response({"message": "Success", "results": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == "POST":
-        serializer = MemberSerializer(data=request.data, context={'request': request})
+        serializer = MemberSerializer(
+            data=request.data, context={'request': request})
         if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Member created successfully", "results": serializer.data}, status=status.HTTP_201_CREATED)
+            member = serializer.save()
+
+            # Send a welcome SMS to the new member
+            recipient_number = member.phone_no
+            if send_welcome_sms(recipient_number, member.names):
+                return Response({"message": "Member created successfully, and welcome SMS sent", "results": serializer.data}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"message": "Member created successfully, but SMS sending failed", "results": serializer.data}, status=status.HTTP_201_CREATED)
         else:
             return Response({"message": "Member creation failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -118,13 +125,12 @@ def residential_area_detail(request, residential_id):
     elif request.method == 'DELETE':
         residential_area.delete()
         return Response({"message": "residential area deleted successfullly"}, status=status.HTTP_204_NO_CONTENT)
-    
-    
+
+
 @api_view(['POST'])
 def daily_collection(request, member_no):
     # Add daily member contributions
     try:
         member = Members.objects.get(mbr_no=member_no)
     except Members.DoesNotExist:
-        return Response({'message': 'Member does not exist'}, status=status.HTTP_404_NOT_FOUND) 
-
+        return Response({'message': 'Member does not exist'}, status=status.HTTP_404_NOT_FOUND)

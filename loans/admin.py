@@ -22,4 +22,4 @@ class LoanForm(forms.ModelForm):
 class LoanAdmin(admin.ModelAdmin):
     form = LoanForm
 
-admin.site.register(Loans, LoanAdmin)
+admin.site.register(Loans, LoanAdmin) 

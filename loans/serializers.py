@@ -44,42 +44,55 @@ class LoanSerializer(serializers.ModelSerializer):
 
 
     def get_lendee(self, loan):
-        member = loan.member.names
-        return member
+        if loan.member:
+            member = loan.member.names
+            return member
+        return None
 
     def get_loan_product_name(self, loan):
-        _type = loan.loan_product
-        return _type.name
+        if loan.loan_product:
+            _type = loan.loan_product
+            return _type.name
+        return None
 
     def get_status_name(self, loan):
-        status = loan.status
-        return status.status_name
+        if loan.status:
+            status = loan.status
+            return status.status_name
+        return None
 
     def get_remaining_grace_period(self, loan):
-        remaining_days = (
-            loan.start_date + timezone.timedelta(days=loan.grace_period) - timezone.now().date()).days
-        return remaining_days if remaining_days > 0 else 0
+        if loan.start_date:
+            remaining_days = (
+                loan.start_date + timezone.timedelta(days=loan.grace_period) - timezone.now().date()).days
+            return remaining_days if remaining_days > 0 else 0
+        return None
 
     def get_is_grace_period(self, loan):
-        remaining_days = (
-            loan.start_date + timezone.timedelta(days=loan.grace_period) - timezone.now().date()).days
-        return 0 < remaining_days <= loan.grace_period
-
+        if loan.start_date:
+            remaining_days = (
+                loan.start_date + timezone.timedelta(days=loan.grace_period) - timezone.now().date()).days
+            return 0 < remaining_days <= loan.grace_period
+        return None
+        
     def get_interest_type(self, loan):
-        _type = loan.loan_product.interest_type
-        return _type
+        if loan.loan_product:
+            _type = loan.loan_product.interest_type
+            return _type
+        return None
     
     def get_guarantors_list(self, loan):
-        guarantors = loan.guarantors.all()
-        guarantors_list = []
-        for guarantor in guarantors:
-            guarantor_data = {
-                'name': guarantor.names,
-                'mbr_no': guarantor.mbr_no
-            }
-            guarantors_list.append(guarantor_data)
-        return guarantors_list
-
+        if loan.guarantors:
+            guarantors = loan.guarantors.all()
+            guarantors_list = []
+            for guarantor in guarantors:
+                guarantor_data = {
+                    'name': guarantor.names,
+                    'mbr_no': guarantor.mbr_no
+                }
+                guarantors_list.append(guarantor_data)
+            return guarantors_list
+        return None
 
     class Meta:
         model = Loans
@@ -93,20 +106,28 @@ class LoanDocumentSerializer(serializers.ModelSerializer):
     created_by = serializers.SerializerMethodField()
 
     def get_document_type(self, document):
-        _type = document.document_type
-        return _type.name
+        if document.document_type:
+            _type = document.document_type
+            return _type.name
+        return None
 
     def get_loan_owner(self, document_loan):
-        lendee = document_loan.loan.member.names
-        return lendee
+        if document_loan.loan:
+            lendee = document_loan.loan.member.names
+            return lendee
+        return None
 
     def get_status(self, document):
-        status = document.status.status_name
-        return status
+        if document.status:
+            status = document.status.status_name
+            return status
+        return None
 
     def get_created_by(self, document_creator):
-        name = document_creator.created_by.fullname
-        return name
+        if document_creator.created_by:
+            name = document_creator.created_by.fullname
+            return name
+        return None
 
     class Meta:
         model = Documents

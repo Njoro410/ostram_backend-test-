@@ -66,12 +66,6 @@ DOCUMENT_TYPE_CHOICES = (
     ('Drivers License', 'Drivers License'),
 )
 
-DOCUMENT_TYPE_CHOICES = (
-    ('National ID', 'National ID'),
-    ('Passport', 'Passport'),
-    ('KRA Pin', 'KRA Pin'),
-    ('Drivers License', 'Drivers License'),
-)
 
 ROLES = (
         ('Admin', 'Admin'),
@@ -98,3 +92,7 @@ DOCUMENT_STATUS_CHOICES = (
 )
 
 
+BRANCH_STATUS_CHOICES = (
+    ('ACTIVE', 'Active'),
+    ('INACTIVE', 'Inactive'),
+)

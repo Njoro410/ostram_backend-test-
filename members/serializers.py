@@ -4,10 +4,17 @@ from .models import *
 
 
 class MemberSerializer(serializers.ModelSerializer):
-    residential = serializers.CharField(source="residential.name", read_only=True)
+    residential_name = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Members
         fields = ('__all__')
+        
+        
+    def get_residential_name(self,member):
+        if member.residential:
+            residential = member.residential.name
+            return residential
+        return None
 
     def save(self, **kwargs):
         user = self.context['request'].user
