@@ -41,7 +41,7 @@ class ResidentialAreas(models.Model):
 class Members(models.Model):
     names = models.CharField(max_length=255, null=True, blank=True)
     mbr_no = models.IntegerField(primary_key=True)
-    id_no = models.IntegerField(blank=True, null=True)
+    id_no = models.CharField(blank=True, null=True, max_length=50)
     gender = models.CharField(
         null=True, blank=True, max_length=255, choices=GENDER_CHOICES
     )

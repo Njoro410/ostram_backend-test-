@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'todo',
     'mpesa',
     'contributions',
-    'sms'
+    'sms',
 
 ]
 
@@ -98,29 +98,29 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-#         'NAME': 'sacco',
-#         'USER': 'brian',
-#         'PASSWORD': '123456',
-
-
-#     }
-# }
-
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "railway",
-        "USER": "postgres",
-        "PASSWORD": "1hEPwF0xR1akBYAKIedC",
-        "HOST": "containers-us-west-151.railway.app",
-        "PORT": "7424",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'sacco1',
+        'USER': 'brian',
+        'PASSWORD': '123456',
+
+
     }
 }
+
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": "railway",
+#         "USER": "postgres",
+#         "PASSWORD": "1hEPwF0xR1akBYAKIedC",
+#         "HOST": "containers-us-west-151.railway.app",
+#         "PORT": "7424",
+#     }
+# }
 
 
 # Password validation

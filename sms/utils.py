@@ -12,7 +12,7 @@ def global_payload(mobile, msg):
         "password": "j47xfDkE",
         "mobile": format_phone_number(mobile),
         "msg": msg,
-        # "senderid": "HPKSMS",
+        "senderid": "OstramSacco",
         "msgType": "text",
         "duplicatecheck": "true",
         "output": "json",

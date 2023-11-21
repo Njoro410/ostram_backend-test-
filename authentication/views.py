@@ -8,14 +8,20 @@ from . import serializers, models
 from django.contrib.auth.models import Permission, Group
 from django.contrib.auth.models import update_last_login
 from rest_framework.parsers import JSONParser
+from .models import staffAccount
+
+from .services import getUserService, getQRCodeService, getOTPValidityService
 # Create your views here.
 
 
 def get_user_tokens(user):
     refresh = tokens.RefreshToken.for_user(user)
+    staff = staffAccount.objects.get(email=user)
+    isAuthenticated = staff.is_authenticator
     return {
         "accessToken": str(refresh.access_token),
-        "refreshToken": str(refresh)
+        "refreshToken": str(refresh),
+        "isAuthenticated": isAuthenticated
     }
 
 
@@ -24,40 +30,42 @@ def get_user_tokens(user):
 def loginView(request):
     serializer = serializers.loginSerializer(data=request.data)
     serializer.is_valid()
+    print(request.data)
 
-    email = serializer.validated_data['email']
-    password = serializer.validated_data['password']
+    email = serializer.validated_data.get('email')
+    password = serializer.validated_data.get('password')
 
     user = authenticate(email=email, password=password)
 
     if user is not None:
         update_last_login(None, user)
+        user.logged_in = True
+        user.save()
         tokens = get_user_tokens(user)
-        res = response.Response()
+        cookie_attributes = {
+            'expires': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+            'secure': settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+            'httponly': settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+            'samesite': settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+        }
+
+        res = response.Response(tokens)
         res.set_cookie(
             key=settings.SIMPLE_JWT['AUTH_COOKIE'],
-            value=tokens["accessToken"],
-            expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
-            secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
-            httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
-            samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+            value=tokens.get("accessToken"),
+            **cookie_attributes
         )
-
         res.set_cookie(
             key=settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'],
-            value=tokens["refreshToken"],
-            expires=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
-            secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
-            httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
-            samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+            value=tokens.get("refreshToken"),
+            **cookie_attributes
         )
-
-        res.data = tokens
         res["X-CSRFToken"] = csrf.get_token(request)
+
         return res
-    # raise rest_exceptions.AuthenticationFailed(
-    #     "Email or Password is incorrect!", code=status.HTTP_400_BAD_REQUEST)
-    return response.Response({"message": "Email or Password is incorrect!", "results": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+    raise rest_exceptions.AuthenticationFailed(
+        "Email or Password is incorrect!", code=status.HTTP_400_BAD_REQUEST)
 
 
 @rest_decorators.api_view(["POST", "PUT"])
@@ -84,6 +92,9 @@ def registerView(request):
 @rest_decorators.api_view(['POST'])
 @rest_decorators.permission_classes([rest_permissions.IsAuthenticated])
 def logoutView(request):
+    user = models.staffAccount.objects.get(id=request.user.id)
+    user.logged_in = False
+    user.save()
     try:
         refreshToken = request.COOKIES.get(
             settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
@@ -223,3 +234,41 @@ def delete_permission_group(request):
 
     group.delete()
     return response.Response({"message": "Permission group deleted successfully"}, status=status.HTTP_200_OK)
+
+
+@rest_decorators.api_view(['POST'])
+def set_2fa_view(request):
+
+    user = getUserService(request)
+    if user is None:
+        return Response({"status": "fail", "message": "No user with the corresponding username and password exists"},
+                        status=status.HTTP_404_NOT_FOUND)
+
+    otp_auth_url = getQRCodeService(user)
+    return response.Response({"otp_auth_url": otp_auth_url})
+
+
+@rest_decorators.api_view(['POST'])
+def verify_2fa_view(request):
+
+    user = models.staffAccount.objects.get(id=request.user.id)
+
+    otp = request.data.get('otp')
+
+    if user is None:
+        return response.Response(
+            {"status": "Verification Failed",
+                "message": "No user with the corresponding username and password exists"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    valid_otp = getOTPValidityService(user, otp)
+
+    if not valid_otp:
+        return response.Response(
+            {"status": "Verification Failed",
+                "message": "OTP is invalid or already used"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    return response.Response({'otp_verified': True})

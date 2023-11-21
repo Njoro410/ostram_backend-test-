@@ -6,11 +6,15 @@ from phonenumber_field.modelfields import PhoneNumberField
 from .managers import AccountManager
 from django.conf import settings
 from administration.models import Branch
+import uuid
+
 # Create your models here.
 
 
 class staffAccount(PermissionsMixin, AbstractBaseUser):
     email = models.EmailField(null=False, blank=False, unique=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=True, unique=True)
+    otp_base32 =  models.CharField(max_length = 200, null = True)
     username = models.CharField(max_length=50, blank=False, null=False)
     is_admin = models.BooleanField(default=False, blank=False, null=False)
     is_active = models.BooleanField(
@@ -38,6 +42,8 @@ class staffAccount(PermissionsMixin, AbstractBaseUser):
         'self', on_delete=models.DO_NOTHING, related_name='manager', blank=True, null=True)
     branch = models.ForeignKey(
         Branch, on_delete=models.CASCADE, blank=True, null=True)
+    is_authenticator = models.BooleanField(default=False)
+    logged_in = models.BooleanField(default = False)
 
     objects = AccountManager()
 
