@@ -241,7 +241,7 @@ def set_2fa_view(request):
 
     user = getUserService(request)
     if user is None:
-        return Response({"status": "fail", "message": "No user with the corresponding username and password exists"},
+        return response.Response({"status": "fail", "message": "No user with the corresponding username and password exists"},
                         status=status.HTTP_404_NOT_FOUND)
 
     otp_auth_url = getQRCodeService(user)

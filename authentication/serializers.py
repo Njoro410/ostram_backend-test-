@@ -114,10 +114,13 @@ class AccountSerializer(serializers.ModelSerializer):
         ]
 
         reports_to_instance = instance.reports_to
-        representation['reports_to'] = {
-            'id': reports_to_instance.id,
-            'name': f'{reports_to_instance.first_name} {reports_to_instance.last_name}',
-        }
+        if reports_to_instance:
+            representation['reports_to'] = {
+                'id': reports_to_instance.id,
+                'name': f'{reports_to_instance.first_name} {reports_to_instance.last_name}',
+            }
+        else:
+            representation['reports_to'] = None
 
         return representation
 

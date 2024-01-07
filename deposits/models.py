@@ -33,7 +33,7 @@ class DepositsAccount(models.Model):
         db_table = "deposits_account"
     
     def __str__(self):
-        return self.account_owner.names
+        return f"{self.account_owner.names}  {self.deposits_balance}"
 
 
         
@@ -60,11 +60,11 @@ class ReceiveDeposits(models.Model):
         self.account.save()
 
         
-class WidthdrawDeposits(models.Model):
+class WithdrawDeposits(models.Model):
     account = models.ForeignKey(DepositsAccount, on_delete=models.CASCADE, related_name="depositsminus")
-    received_amount = models.DecimalField(
+    withdrawn_amount = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    received_date = models.DateField(blank=True, null=True)
+    withdrawn_date = models.DateField(blank=True, null=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='depositsminus_instance_creator', blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -73,11 +73,11 @@ class WidthdrawDeposits(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, blank=True, related_name='depositsminus_instance_updater', null=True)
     
     def __str__(self):
-        return f"{self.account.account_owner.names}'s {self.received_date}"
+        return f"{self.account.account_owner.names}'s {self.withdrawn_date}"
     
     @transaction.atomic
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # update the balance of this member's deposits account by reducing received amount
-        self.account.deposits_balance -= self.received_amount
+        self.account.deposits_balance -= self.withdrawn_amount
         self.account.save()

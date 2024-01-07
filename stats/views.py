@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view
-from savings.models import SavingsAccount, ReceiveSavings, WidthdrawSavings
+from savings.models import SavingsAccount, ReceiveSavings, WithdrawSavings
 from deposits.models import DepositsAccount
 from loans.models import Loans
 from rest_framework.response import Response
@@ -35,7 +35,7 @@ def get_statistics(request):
         start_date__year=current_year, start_date__month=current_month).count()
     total_received_savings_current_year = ReceiveSavings.objects.filter(
         received_date__year=current_year).aggregate(total=Sum('received_amount'))['total']
-    total_withdrawn_savings_current_year = WidthdrawSavings.objects.filter(
+    total_withdrawn_savings_current_year = WithdrawSavings.objects.filter(
         received_date__year=current_year).aggregate(total=Sum('received_amount'))['total']
 
     end_date = date.today()

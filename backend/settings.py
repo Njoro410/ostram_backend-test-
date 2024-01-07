@@ -98,17 +98,29 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+#         'NAME': 'sacco1',
+#         'USER': 'brian',
+#         'PASSWORD': '123456',
+
+
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': 'sacco1',
-        'USER': 'brian',
-        'PASSWORD': '123456',
-
-
+        'NAME': 'qysepwttnpomwrgq',
+        'USER': 'jswdayninzxnufgb',
+        'PASSWORD': 'jqkhvcwghdecggfc',
+        'HOST': '3.250.230.11',
+        'PORT': '8000',
     }
 }
+
 
 
 # DATABASES = {
@@ -178,10 +190,14 @@ CORS_ALLOWED_ORIGINS = [
     "https://ost-sacco-management-system.vercel.app",
     "http://localhost:5173",
 ]
+
+# CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(',')
+
 CORS_ORIGIN_WHITELIST = [
     "https://ost-sacco-management-system.vercel.app",
     "http://localhost:5173",
 ]
+# CORS_ORIGIN_WHITELIST = os.environ.get('CORS_ORIGIN_WHITELIST', "").split(',')
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_SECURE = True
@@ -190,6 +206,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://ost-sacco-management-system.vercel.app",
     "http://localhost:5173",
 ]
+# CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS',"").split(',')
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = "None"

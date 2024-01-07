@@ -10,6 +10,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime
 from django.db import transaction
+from decimal import Decimal
 
 # Create your models here.
 
@@ -69,6 +70,7 @@ class Loans(models.Model):
     remaining_balance = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True, default=0)
     status = models.ForeignKey(LoanStatus, on_delete=models.PROTECT)
+    is_active = models.BooleanField(blank=True, null=True)
     term = models.IntegerField()
     grace_period = models.IntegerField()
     application_date = models.DateField()
@@ -171,22 +173,22 @@ class Loans(models.Model):
         super().save(update_fields=[
             'remaining_balance', 'excess_payment', 'status'])
 
-    def is_defaulted(self):
-        grace_period = self.grace_period  # Define the grace period in days
-        # Define the number of consecutive missed payments
-        consecutive_missed_payments = self.consecutive_missed_payments
+    # def is_defaulted(self):
+    #     grace_period = self.grace_period  # Define the grace period in days
+    #     # Define the number of consecutive missed payments
+    #     consecutive_missed_payments = self.consecutive_missed_payments
 
-        last_payment_date = self.loanrepayment_set.order_by(
-            '-payment_date').first().payment_date
-        due_date = self.start_date + timedelta(days=(self.term * 30))
-        current_date = timezone.now().date()
+    #     last_payment_date = self.loanrepayment_set.order_by(
+    #         '-payment_date').first().payment_date
+    #     due_date = self.start_date + timedelta(days=(self.term * 30))
+    #     current_date = timezone.now().date()
 
-        if last_payment_date < due_date:
-            days_past_due = (current_date - due_date).days
-            if days_past_due > grace_period and self.missed_payments_count() >= consecutive_missed_payments:
-                return True
+    #     if last_payment_date < due_date:
+    #         days_past_due = (current_date - due_date).days
+    #         if days_past_due > grace_period and self.missed_payments_count() >= consecutive_missed_payments:
+    #             return True
 
-        return False
+    #     return False
 
     def missed_payments_count(self):
         return self.loanrepayment_set.filter(payment_date__gt=self.start_date).count()
@@ -248,14 +250,8 @@ class LoanRepayment(models.Model):
                              null=True, blank=True, related_name="loanrepayment_set")
     payment_amount = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    # is_insterest_included = models.BooleanField(
-    #     help_text='is the interest amount already included in the amount')
     # loan_interest = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
     payment_date = models.DateField(blank=True, null=True)
-    # loan_form_fee = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
-    # loan_processing_fee = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
-    # loan_insurance_fee = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
-    # late_charges = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='loanRepayment_instance_creator', blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -272,25 +268,27 @@ class LoanRepayment(models.Model):
     @transaction.atomic
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        installments = self.loan.installment_set.order_by('installment_number')
-        payment_amount = self.payment_amount
-        self.loan.make_payment(payment_amount)
-        for installment in installments:
-            if installment.amount_paid == installment.total_installment_amount:
-                continue
-            if not installment.paid:
-                if payment_amount >= installment.amount_due:
-                    payment_amount -= installment.amount_due
-                    installment.amount_paid += installment.amount_due
-                    installment.amount_due = 0
-                    installment.paid = True
-                else:
-                    installment.amount_due -= payment_amount
-                    installment.amount_paid += payment_amount
-                    payment_amount = 0
-            installment.save()
-            if payment_amount == 0:
-                break
+        # Check if received_amount is not zero before updating the balance
+        if self.payment_amount is not None and self.payment_amount != Decimal('0.00'):
+            installments = self.loan.installment_set.order_by('installment_number')
+            payment_amount = self.payment_amount
+            self.loan.make_payment(payment_amount)
+            for installment in installments:
+                if installment.amount_paid == installment.total_installment_amount:
+                    continue
+                if not installment.paid:
+                    if payment_amount >= installment.amount_due:
+                        payment_amount -= installment.amount_due
+                        installment.amount_paid += installment.amount_due
+                        installment.amount_due = 0
+                        installment.paid = True
+                    else:
+                        installment.amount_due -= payment_amount
+                        installment.amount_paid += payment_amount
+                        payment_amount = 0
+                installment.save()
+                if payment_amount == 0:
+                    break
 
 
 class Documents(models.Model):

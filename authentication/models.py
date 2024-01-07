@@ -14,7 +14,7 @@ import uuid
 class staffAccount(PermissionsMixin, AbstractBaseUser):
     email = models.EmailField(null=False, blank=False, unique=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=True, unique=True)
-    otp_base32 =  models.CharField(max_length = 200, null = True)
+    otp_base32 =  models.CharField(max_length = 200, null = True, blank=True)
     username = models.CharField(max_length=50, blank=False, null=False)
     is_admin = models.BooleanField(default=False, blank=False, null=False)
     is_active = models.BooleanField(

@@ -8,23 +8,18 @@ def format_phone_number(input_number):
         formatted_number = "+254" + cleaned_number[1:]
         return formatted_number
     else:
-        # Return the original input if it doesn't match the expected format
-        return input_number
+        # Return None if it doesn't match the expected format
+        return None
+ 
 
-
-def sentence_case(input_string):
+def sentence_case_first_name(input_string):
     # Split the input string into words
     words = input_string.split()
 
-    # Initialize an empty list to store the modified words
-    modified_words = []
+    # Pick the first word
+    first_name = words[0]
 
-    for word in words:
-        # Convert the first character to uppercase and the rest to lowercase
-        modified_word = word[0].upper() + word[1:].lower()
-        modified_words.append(modified_word)
+    # Convert the first character to uppercase and the rest to lowercase
+    modified_first_name = first_name[0].upper() + first_name[1:].lower()
 
-    # Join the modified words into a sentence
-    result = ' '.join(modified_words)
-
-    return result
+    return modified_first_name

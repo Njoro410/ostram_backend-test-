@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import date
 from django.db import transaction
+from decimal import Decimal
 
 @receiver(post_save, sender=Members)
 def create_savings_account(sender,instance,created,**kwargs):
@@ -34,7 +35,7 @@ class SavingsAccount(models.Model):
         db_table = "savings_account"
 
     def __str__(self):
-        return f"{self.account_owner.names}'s Saving Account"
+        return f"{self.account_owner.names} {self.savings_balance}"
     
 class ReceiveSavings(models.Model):
     account = models.ForeignKey(SavingsAccount, on_delete=models.CASCADE, related_name="savingsplus")
@@ -54,16 +55,18 @@ class ReceiveSavings(models.Model):
     @transaction.atomic
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        # update the balance of this member's saving account by adding received amount
-        self.account.savings_balance += self.received_amount
-        self.account.save()
+        # Check if received_amount is not zero before updating the balance
+        if self.received_amount is not None and self.received_amount != Decimal('0.00'):
+            # update the balance of this member's saving account by adding received amount
+            self.account.savings_balance += self.received_amount
+            self.account.save()
 
         
-class WidthdrawSavings(models.Model):
+class WithdrawSavings(models.Model):
     account = models.ForeignKey(SavingsAccount, on_delete=models.CASCADE, related_name="savingsminus")
-    received_amount = models.DecimalField(
+    withdrawn_amount = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    received_date = models.DateField(blank=True, null=True)
+    withdrawn_date = models.DateField(blank=True, null=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='savingsminus_instance_creator', blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -72,12 +75,14 @@ class WidthdrawSavings(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, blank=True, related_name='savingsminus_instance_updater', null=True)
     
     def __str__(self):
-        return f"{self.account.account_owner.names}'s {self.received_date}"
+        return f"{self.account.account_owner.names}'s {self.withdrawn_date}"
     
     @transaction.atomic
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        # update the balance of this member's saving account by reducing received amount
-        self.account.savings_balance -= self.received_amount
-        self.account.save()
+        # Check if withdrawn_amount is not zero before updating the balance
+        if self.withdrawn_amount is not None and self.withdrawn_amount != Decimal('0.00'):
+            # update the balance of this member's saving account by reducing received amount
+            self.account.savings_balance -= self.withdrawn_amount
+            self.account.save()
 
