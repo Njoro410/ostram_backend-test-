@@ -178,14 +178,14 @@ DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 
 CORS_ALLOWED_ORIGINS = [
-    "https://ost-sacco-management-system.vercel.app",
+    "https://ostram-frontend-test.vercel.app",
     "http://localhost:5173",
 ]
 
 # CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(',')
 
 CORS_ORIGIN_WHITELIST = [
-    "https://ost-sacco-management-system.vercel.app",
+    "https://ostram-frontend-test.vercel.app/",
     "http://localhost:5173",
 ]
 # CORS_ORIGIN_WHITELIST = os.environ.get('CORS_ORIGIN_WHITELIST', "").split(',')
@@ -194,7 +194,7 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_TRUSTED_ORIGINS = [
-    "https://ost-sacco-management-system.vercel.app",
+    "https://ostram-frontend-test.vercel.app/",
     "http://localhost:5173",
 ]
 # CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS',"").split(',')
