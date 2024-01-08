@@ -98,41 +98,29 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
+#localhost database creds
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-#         'NAME': 'sacco1',
-#         'USER': 'brian',
-#         'PASSWORD': '123456',
-
-
+#         'ENGINE': os.environ.get('DB_ENGINE', ''),
+#         'NAME': os.environ.get('DB_NAME', ''),
+#         'USER': os.environ.get('DB_USER', ''),
+#         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
 #     }
 # }
 
+
+
+#production database creds
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'qysepwttnpomwrgq',
-        'USER': 'jswdayninzxnufgb',
-        'PASSWORD': 'jqkhvcwghdecggfc',
-        'HOST': '3.250.230.11',
-        'PORT': '8000',
+        'ENGINE': os.environ.get('DB_ENGINE', ''),
+        'NAME': os.environ.get('DB_NAME', ''),
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', ''),
+        'PORT': os.environ.get('DB_PORT', ''),
     }
 }
-
-
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql_psycopg2",
-#         "NAME": "railway",
-#         "USER": "postgres",
-#         "PASSWORD": "1hEPwF0xR1akBYAKIedC",
-#         "HOST": "containers-us-west-151.railway.app",
-#         "PORT": "7424",
-#     }
-# }
 
 
 # Password validation
